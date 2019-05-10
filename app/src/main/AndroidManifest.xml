@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.blq.ssnb.snbutil">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MApplication"
         android:allowBackup="true"
@@ -20,6 +23,10 @@
         <activity android:name=".demo.SnbToastActivity" />
         <activity android:name=".demo.SnbTimeActivity" />
         <activity android:name=".demo.SnbScreenActivity" />
+        <activity android:name=".demo.SnbPreferencesActivity" />
+        <activity android:name=".demo.SnbLogActivity" />
+        <activity android:name=".demo.SnbFileActivity" />
+        <activity android:name=".demo.SnbDisplayActivity" />
     </application>
 
 </manifest>

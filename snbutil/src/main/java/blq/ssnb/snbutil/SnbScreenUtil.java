@@ -240,9 +240,6 @@ public class SnbScreenUtil {
         DisplayMetrics metrics = SnbDisplayUtil.getDisplayMetrics(activity);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
-//        Point point = getReleaseScreenSize(activity);
-//        width = point.x;
-//        height = point.y;
         return screenShot(activity, 0, 0, width, height);
     }
 

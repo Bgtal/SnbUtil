@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_150dp_view"
+        android:layout_width="150dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/sview_blue_500"
+        android:gravity="center"
+        android:text="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_dp_view"
+        android:layout_width="150dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/sview_amber_500"
+        app:layout_constraintStart_toStartOf="@id/tv_150dp_view"
+        app:layout_constraintTop_toBottomOf="@id/tv_150dp_view" />
+
+    <TextView
+        android:id="@+id/tv_db_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="150dp"
+        app:layout_constraintEnd_toEndOf="@id/tv_150dp_view"
+        app:layout_constraintStart_toStartOf="@id/tv_150dp_view"
+        app:layout_constraintTop_toBottomOf="@id/tv_dp_view" />
+
+    <SeekBar
+        android:id="@+id/sb_dp_change"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:max="150"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_db_info" />
+
+    <TextView
+        android:id="@+id/tv_sp_example_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="代码设置文字sp-系统"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sp_hint" />
+
+    <TextView
+        android:id="@+id/tv_sp_show_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="代码设置文字sp-工具"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sp_example_view" />
+
+    <TextView
+        android:id="@+id/tv_sub_btn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/sview_grey_300"
+        android:gravity="center"
+        android:text="-"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_sp_info_view"
+        app:layout_constraintEnd_toStartOf="@+id/tv_sp_info_view"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_sp_info_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="16sp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_dp_change" />
+
+    <TextView
+        android:id="@+id/tv_add_btn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/sview_grey_300"
+        android:gravity="center"
+        android:text="+"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_sp_info_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_sp_info_view" />
+
+    <TextView
+        android:id="@+id/tv_sp_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="加减以修改文字大小，用于对比系统自带设置文字大小和工具计算文字大小的区别"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sp_info_view" />
+</android.support.constraint.ConstraintLayout>
