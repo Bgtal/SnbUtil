@@ -1,4 +1,4 @@
-# SnbUtil [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)   
+# SnbUtil [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21) [![](https://jitpack.io/v/Bgtal/SnbUtil.svg)](https://jitpack.io/#Bgtal/SnbUtil)
 
 > maven
 ```  
@@ -10,8 +10,7 @@ allprojects {
     }
 }
 ```
-
-<!-- > implementation 'com.github.Bgtal:BaseConfigure:1.0.5' -->
+> implementation 'com.github.Bgtal:SnbUtil:0.0.7'
 
 ## 项目依赖
 * 使用的时候需要在自己的项目中引用下面的包，不然会报错
