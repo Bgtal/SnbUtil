@@ -5,7 +5,6 @@ import android.widget.TextView;
 
 import com.blq.ssnb.snbutil.R;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,7 +62,6 @@ public class SnbPreferencesActivity extends SimpleMenuActivity {
     protected void initData() {
         super.initData();
         mPreferences = new SnbPreferences(getContext(), "PlistName");
-        ArrayList<File> files = new ArrayList<>();
 
     }
 

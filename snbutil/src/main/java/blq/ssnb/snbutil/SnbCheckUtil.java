@@ -22,7 +22,7 @@ import java.util.List;
  * 日期: 2018/7/27
  * 邮箱: blq_ssnb@outlook.com
  * 修改次数: 1
- * 描述:
+ * 描述: @hide
  * 检查工具
  * 1 判断当前线程是否在主线程
  * 2 判断当前网络是否为wifi ，数据流量

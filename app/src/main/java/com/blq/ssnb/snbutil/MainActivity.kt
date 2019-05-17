@@ -21,6 +21,10 @@ class MainActivity : SimpleMenuActivity() {
         menuBeans.add(MenuBean().setMenuTitle("SnbLog").setActivityClass(SnbLogActivity::class.java))
         menuBeans.add(MenuBean().setMenuTitle("FILE").setActivityClass(SnbFileActivity::class.java))
         menuBeans.add(MenuBean().setMenuTitle("SnbDisplay").setActivityClass(SnbDisplayActivity::class.java))
+        menuBeans.add(MenuBean().setMenuTitle("SnbDateCreate").setActivityClass(SnbDateCreateActivity::class.java))
+        menuBeans.add(MenuBean().setMenuTitle("SnbCountDownTimer").setActivityClass(SnbCountDownTimerActivity::class.java))
+        menuBeans.add(MenuBean().setMenuTitle("SnbRippleCreateFactory").setActivityClass(SnbRippleActivity::class.java))
+        menuBeans.add(MenuBean().setMenuTitle("SnbColorAndDrawableSelectorActivity").setActivityClass(SnbColorAndDrawableSelectorActivity::class.java))
 
         return menuBeans
     }

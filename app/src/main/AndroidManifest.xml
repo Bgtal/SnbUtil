@@ -27,6 +27,10 @@
         <activity android:name=".demo.SnbLogActivity" />
         <activity android:name=".demo.SnbFileActivity" />
         <activity android:name=".demo.SnbDisplayActivity" />
+        <activity android:name=".demo.SnbDateCreateActivity" />
+        <activity android:name=".demo.SnbCountDownTimerActivity" />
+        <activity android:name=".demo.SnbRippleActivity" />
+        <activity android:name=".demo.SnbColorAndDrawableSelectorActivity" />
     </application>
 
 </manifest>

@@ -2,10 +2,13 @@ package blq.ssnb.snbutil.kit;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -25,34 +28,44 @@ import android.support.annotation.RequiresApi;
  */
 public class SnbRippleCreateFactory {
 
-    public static LayerDrawable noMask(@ColorInt int color) {
-        return noMask(color, -1);
+    /**
+     * {@link #noMask(ColorStateList)}
+     */
+    public static Drawable noMask(Context context, @ColorRes int colorRes) {
+        return noMask(context.getResources().getColor(colorRes));
     }
 
-    public static LayerDrawable noMask(Context context, @ColorRes int colorRes) {
-        return noMask(context, colorRes, -1);
-    }
-
-    public static LayerDrawable noMask(ColorStateList colorStateList) {
-        return noMask(colorStateList, -1);
-    }
-
-    public static LayerDrawable noMask(@ColorInt int color, int radius) {
-        return noMask(ColorStateList.valueOf(color), radius);
-    }
-
-    public static LayerDrawable noMask(Context context, @ColorRes int colorRes, int radius) {
-        return noMask(context.getResources().getColorStateList(colorRes), radius);
+    /**
+     * {@link #noMask(ColorStateList)}
+     */
+    public static Drawable noMask(@ColorInt int color) {
+        return noMask(ColorStateList.valueOf(color));
     }
 
     /**
      * 没有设置边界的水波纹drawable
      *
      * @param colorStateList colorStateList
-     * @param radius         按下后水波的半径 <0 表示使用系统默认的半径
      */
-    public static LayerDrawable noMask(ColorStateList colorStateList, int radius) {
+    public static Drawable noMask(ColorStateList colorStateList) {
         return backgroundAndMask(colorStateList, null, null);
+    }
+
+    /**
+     * {@link #mask(int, Drawable)}
+     */
+    public static Drawable mask(@ColorInt int rippleColor) {
+        return mask(rippleColor, new ColorDrawable(0x7f000000));
+    }
+
+    /**
+     * 设置 有边界的水波纹,边界大小为mask的大小
+     *
+     * @param rippleColor 水波纹颜色
+     * @param mask        边界对象
+     */
+    public static Drawable mask(@ColorInt int rippleColor, Drawable mask) {
+        return backgroundAndMask(ColorStateList.valueOf(rippleColor), null, mask);
     }
 
     /**
@@ -62,25 +75,14 @@ public class SnbRippleCreateFactory {
      * @param background
      * @return
      */
-    public static LayerDrawable backgroundMask(ColorStateList colorStateList, Drawable background) {
+    public static Drawable backgroundMask(ColorStateList colorStateList, Drawable background) {
         return backgroundAndMask(colorStateList, background, null);
     }
 
     /**
-     * 设置 有边界的水波纹
-     *
-     * @param colorStateList
-     * @param mask           边界对象
-     * @return
-     */
-    public static LayerDrawable mask(ColorStateList colorStateList, Drawable mask) {
-        return backgroundAndMask(colorStateList, null, mask);
-    }
-
-    /**
-     * 设置背景 和 边界 的水波纹效果 (背景不会显示，只有触发水波纹的时候显示)
+     * 设置背景 和 边界 的水波纹效果 (背景一直显示，只有触发水波纹的时候会显示背景drawable)
      * 如果mask 为null 效果和 {@link #backgroundMask(ColorStateList, Drawable)}一样
-     * 如果background 为null 效果和 {@link #mask(ColorStateList, Drawable)} 一样
+     * 如果background 为null 效果和 {@link #mask(int, Drawable)} 一样
      * 如果两个都未设置，效果为 不设边界的水波纹效果
      *
      * @param colorStateList
@@ -88,22 +90,26 @@ public class SnbRippleCreateFactory {
      * @param mask
      * @return
      */
-    public static LayerDrawable backgroundAndMask(ColorStateList colorStateList, Drawable background, Drawable mask) {
-        return backgroundAndMask(colorStateList, background, mask, -1);
-    }
-
-    public static LayerDrawable backgroundAndMask(ColorStateList colorStateList, Drawable background, Drawable mask, int radius) {
+    public static Drawable backgroundAndMask(ColorStateList colorStateList, Drawable background, Drawable mask) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return new Builder(colorStateList)
                     .setContent(background)
-                    .setRadius(radius)
                     .setMask(mask)
                     .build();
         } else {
-//            LayerDrawable dd = new LayerDrawable(new Drawable[]{});
-
-            return null;
+            SnbDrawableSelector.Builder builder = new SnbDrawableSelector.Builder();
+            if (background != null) {
+                builder.normal(background);
+            } else {
+                builder.normal(new ColorDrawable());
+            }
+            if (mask != null) {
+                builder.pressed(mask);
+            } else if (colorStateList != null) {
+                builder.pressed(new ColorDrawable(colorStateList.getDefaultColor()));
+            }
+            return builder.build().getDrawable();
         }
     }
 
@@ -143,7 +149,6 @@ public class SnbRippleCreateFactory {
             mRect = new Rect(left, top, right, bottom);
             return this;
         }
-
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         public RippleDrawable build() {

@@ -4,4 +4,16 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="testColor">#87999999</color>
+
+    <color name="windowUnFocused">#FF0000</color>
+    <color name="checkable">#FFC125</color>
+    <color name="activated">#00FF00</color>
+    <color name="selected">#8470FF</color>
+    <color name="disabled">#0000EE</color>
+    <color name="pressed">#6D4C41</color>
+    <color name="hovered">#00BCD4</color>
+    <color name="focused">#FFAB91</color>
+    <color name="checked">#6A1B9A</color>
+    <color name="normal">#888888</color>
+
 </resources>

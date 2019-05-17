@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">SnbUtil</string>
+
+    <string name="selector_note">Color 和 Drawable 的selector工具为了解决懒得写xml而写。
+        但是还是有问题存在,无法同时满足两种或多种状态同存的情况，
+        例如 focused 状态下 又按下 那么不会出现按下的效果，而是normal 效果，
+        因为涉及到排列组合和排列顺序，等想到好的方法再来解决，平时用到的就几种状态不会冲突，够用了</string>
+    <string name="color_selector">
+        使用方法:\n
+        SnbColorSelector.Builder()\n
+                .windowUnFocused(ColorInt)\n
+                .checkable(ColorInt)\n
+                .activated(ColorInt)\n
+                .selected(ColorInt)\n
+                .disabled(ColorInt)\n
+                .pressed(ColorInt)\n
+                .hovered(ColorInt)\n
+                .focused(ColorInt)\n
+                .checked(ColorInt)\n
+                .normal(ColorInt)\n
+                .build()\n
+                .setTextColor(TextView)\n
+
+    </string>
+    <string name="drawble_selector">
+        note:使用的时候需要注意build之后就会产生一个StateListDrawable，所以不要用同一个对象去设置不同的view 否者会导致共用对象的问题
+        使用方法:\n
+        SnbDrawableSelector.Builder()\n
+                .windowUnFocused(Drawable)\n
+                .checkable(Drawable)\n
+                .activated(Drawable)\n
+                .selected(Drawable)\n
+                .disabled(Drawable)\n
+                .pressed(Drawable)\n
+                .hovered(Drawable)\n
+                .focused(Drawable)\n
+                .checked(Drawable)\n
+                .normal(Drawable)\n
+        builder.build().setBackground(View)\n
+
+    </string>
 </resources>

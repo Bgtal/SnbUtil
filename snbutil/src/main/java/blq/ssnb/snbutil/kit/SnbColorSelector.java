@@ -1,8 +1,14 @@
 package blq.ssnb.snbutil.kit;
 
 import android.content.res.ColorStateList;
-import android.support.annotation.NonNull;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <pre>
@@ -18,307 +24,52 @@ import android.widget.TextView;
  */
 
 public final class SnbColorSelector {
-    private static final int EMPTY = -1;
-
-    /**
-     * 9中变化状态
-     */
-    private static int checked = android.R.attr.state_checked;
-    private static int unChecked = -checked;
-
-    private static int focused = android.R.attr.state_focused;
-    private static int unFocused = -focused;
-
-    private static int hovered = android.R.attr.state_hovered;
-    private static int unHovered = -hovered;
-
-    private static int pressed = android.R.attr.state_pressed;
-    private static int unPressed = -pressed;
-
-    private static int enabled = android.R.attr.state_enabled;
-    private static int unEnabled = -enabled;
-
-    private static int selected = android.R.attr.state_selected;
-    private static int unSelected = -selected;
-
-    private static int activated = android.R.attr.state_activated;
-    private static int unActivated = -activated;
-
-    private static int checkable = android.R.attr.state_checkable;
-    private static int unCheckable = -checkable;
-
-    private static int windowFocused = android.R.attr.state_window_focused;
-    private static int unWindowFocused = -windowFocused;
-
-    /**
-     * 10中状态对应显示的图片
-     */
-    private int normalColor;
-    private int checkedColor;
-    private int focusedColor;
-    private int hoveredColor;
-    private int pressedColor;
-    private int disabledColor;
-    private int selectedColor;
-    private int activatedColor;
-    private int checkableColor;
-    private int windowUnFocusedColor;
-
-    /**
-     * 10中状态对应的匹配规则
-     */
-    private int[] normalState;
-    private int[] checkedState;
-    private int[] focusedState;
-    private int[] hoveredState;
-    private int[] pressedState;
-    private int[] disabledState;
-    private int[] selectedState;
-    private int[] activatedState;
-    private int[] checkableState;
-    private int[] windowFocusedState;
-
     private ColorStateList mTextColor;
+    private ColorBean[] mColorBeanList;
 
-
-    private SnbColorSelector(Builder builder) {
-        this.normalColor = builder.normalColor;
-        this.checkedColor = builder.checkedColor;
-        this.focusedColor = builder.focusedColor;
-        this.hoveredColor = builder.hoveredColor;
-        this.pressedColor = builder.pressedColor;
-        this.disabledColor = builder.disabledColor;
-        this.selectedColor = builder.selectedColor;
-        this.activatedColor = builder.activatedColor;
-        this.checkableColor = builder.checkableColor;
-        this.windowUnFocusedColor = builder.windowUnFocusedColor;
-        mTextColor = getStateListDrawable();
+    private SnbColorSelector(ColorBean[] colorBeans) {
+        mColorBeanList = colorBeans;
+        initStates(colorBeans);
+        mTextColor = initColorStateList();
     }
 
-    private ColorStateList getStateListDrawable() {
-        int[][] status;
-        int[] color;
-        int size = initState();
-        if (size == 0) {
-            return null;
+    private void initStates(ColorBean[] colorBeans) {
+        int k = 0;
+        for (ColorBean bean : colorBeans) {
+            if (bean.mSelectState.equals(SnbSelectState.NORMAL)) {
+                continue;
+            }
+            for (ColorBean item : colorBeans) {
+                int value = item.equals(bean) ? bean.mSelectState.getStateValue() : bean.mSelectState.getUnStateValue();
+                if (item.stateArray == null) {
+                    item.stateArray = new int[colorBeans.length - 1];
+                }
+                item.stateArray[k] = value;
+            }
+            k++;
         }
-        status = new int[size][];
-        color = new int[size];
-        size--;
-        if (normalColor != EMPTY) {
-            status[size] = normalState;
-            color[size] = normalColor;
-            size--;
-        }
-        if (checkedColor != EMPTY) {
-            status[size] = checkedState;
-            color[size] = checkedColor;
-            size--;
-        }
-        if (focusedColor != EMPTY) {
-            status[size] = focusedState;
-            color[size] = focusedColor;
-            size--;
-        }
-        if (hoveredColor != EMPTY) {
-            status[size] = hoveredState;
-            color[size] = hoveredColor;
-            size--;
-        }
-        if (pressedColor != EMPTY) {
-            status[size] = pressedState;
-            color[size] = pressedColor;
-            size--;
-        }
-        if (disabledColor != EMPTY) {
-            status[size] = disabledState;
-            color[size] = disabledColor;
-            size--;
-        }
-        if (selectedColor != EMPTY) {
-            status[size] = selectedState;
-            color[size] = selectedColor;
-            size--;
-        }
-        if (activatedColor != EMPTY) {
-            status[size] = activatedState;
-            color[size] = activatedColor;
-            size--;
-        }
-        if (checkableColor != EMPTY) {
-            status[size] = checkableState;
-            color[size] = checkableColor;
-            size--;
-        }
-        if (windowUnFocusedColor != EMPTY) {
-            status[size] = windowFocusedState;
-            color[size] = windowUnFocusedColor;
-        }
-
-        return new ColorStateList(status, color);
     }
 
-    private int initState() {
-        int size;
-        int i = colorCount();
-        if (i == 0) {
-            return 0;
-        }
-        size = i;
-        //因为normal状态没有true/false 选项所以个数要减一
-        i--;
-        normalState = new int[i];
-        checkedState = new int[i];
-        focusedState = new int[i];
-        hoveredState = new int[i];
-        pressedState = new int[i];
-        disabledState = new int[i];
-        selectedState = new int[i];
-        activatedState = new int[i];
-        checkableState = new int[i];
-        windowFocusedState = new int[i];
-        i--;
+    private ColorStateList initColorStateList() {
 
-        if (checkedColor != EMPTY) {
-            normalState[i] = unChecked;
-            checkedState[i] = checked;
-            focusedState[i] = unChecked;
-            hoveredState[i] = unChecked;
-            pressedState[i] = unChecked;
-            disabledState[i] = unChecked;
-            selectedState[i] = unChecked;
-            activatedState[i] = unChecked;
-            checkableState[i] = unChecked;
-            windowFocusedState[i] = unChecked;
-            i--;
-        }
-        if (focusedColor != EMPTY) {
-            normalState[i] = unFocused;
-            checkedState[i] = unFocused;
-            focusedState[i] = focused;
-            hoveredState[i] = unFocused;
-            pressedState[i] = unFocused;
-            disabledState[i] = unFocused;
-            selectedState[i] = unFocused;
-            activatedState[i] = unFocused;
-            checkableState[i] = unFocused;
-            windowFocusedState[i] = unFocused;
-            i--;
-        }
+        int[][] states = new int[mColorBeanList.length][];
+        int[] colors = new int[mColorBeanList.length];
 
-        if (hoveredColor != EMPTY) {
-            normalState[i] = unHovered;
-            checkedState[i] = unHovered;
-            focusedState[i] = unHovered;
-            hoveredState[i] = hovered;
-            pressedState[i] = unHovered;
-            disabledState[i] = unHovered;
-            selectedState[i] = unHovered;
-            activatedState[i] = unHovered;
-            checkableState[i] = unHovered;
-            windowFocusedState[i] = unHovered;
-            i--;
+        /**
+         * @note 这里的方法千万不能改变顺序，否者就会显示有问题
+         * 主要原因是，select 的是按顺序匹配的，如果normal排在前面，那么后面的都匹配不到，所以不能随便改顺序
+         */
+        for (int i = 0; i < mColorBeanList.length; i++) {
+            ColorBean bean = mColorBeanList[i];
+            if (bean.mSelectState == SnbSelectState.NORMAL) {
+                states[i] = new int[]{};
+            } else {
+                states[i] = bean.stateArray;
+            }
+            colors[i] = bean.color;
         }
-        if (pressedColor != EMPTY) {
-            normalState[i] = unPressed;
-            checkedState[i] = unPressed;
-            focusedState[i] = unPressed;
-            hoveredState[i] = unPressed;
-            pressedState[i] = pressed;
-            disabledState[i] = unPressed;
-            selectedState[i] = unPressed;
-            activatedState[i] = unPressed;
-            checkableState[i] = unPressed;
-            windowFocusedState[i] = unPressed;
-            i--;
-        }
-        if (disabledColor != EMPTY) {
-            normalState[i] = enabled;
-            checkedState[i] = enabled;
-            focusedState[i] = enabled;
-            hoveredState[i] = enabled;
-            pressedState[i] = enabled;
-            disabledState[i] = unEnabled;
-            selectedState[i] = enabled;
-            activatedState[i] = enabled;
-            checkableState[i] = enabled;
-            windowFocusedState[i] = enabled;
-            i--;
-        }
-        if (selectedColor != EMPTY) {
-            normalState[i] = unSelected;
-            checkedState[i] = unSelected;
-            focusedState[i] = unSelected;
-            hoveredState[i] = unSelected;
-            pressedState[i] = unSelected;
-            disabledState[i] = unSelected;
-            selectedState[i] = selected;
-            activatedState[i] = unSelected;
-            checkableState[i] = unSelected;
-            windowFocusedState[i] = unSelected;
-            i--;
-        }
-        if (activatedColor != EMPTY) {
-            normalState[i] = unActivated;
-            checkedState[i] = unActivated;
-            focusedState[i] = unActivated;
-            hoveredState[i] = unActivated;
-            pressedState[i] = unActivated;
-            disabledState[i] = unActivated;
-            selectedState[i] = unActivated;
-            activatedState[i] = activated;
-            checkableState[i] = unActivated;
-            windowFocusedState[i] = unActivated;
-            i--;
-        }
-        if (checkableColor != EMPTY) {
-            normalState[i] = unCheckable;
-            checkedState[i] = unCheckable;
-            focusedState[i] = unCheckable;
-            hoveredState[i] = unCheckable;
-            pressedState[i] = unCheckable;
-            disabledState[i] = unCheckable;
-            selectedState[i] = unCheckable;
-            activatedState[i] = unCheckable;
-            checkableState[i] = checkable;
-            windowFocusedState[i] = unCheckable;
-            i--;
-        }
-        if (windowUnFocusedColor != EMPTY) {
-            normalState[i] = windowFocused;
-            checkedState[i] = windowFocused;
-            focusedState[i] = windowFocused;
-            hoveredState[i] = windowFocused;
-            pressedState[i] = windowFocused;
-            disabledState[i] = windowFocused;
-            selectedState[i] = windowFocused;
-            activatedState[i] = windowFocused;
-            checkableState[i] = windowFocused;
-            windowFocusedState[i] = unWindowFocused;
-        }
-        return size;
+        return new ColorStateList(states, colors);
     }
-
-    /**
-     * 获得设置的状态的个数
-     *
-     * @return 状态个数
-     */
-    private int colorCount() {
-        int i = 0;
-        i = normalColor != EMPTY ? ++i : i;
-        i = checkedColor != EMPTY ? ++i : i;
-        i = focusedColor != EMPTY ? ++i : i;
-        i = hoveredColor != EMPTY ? ++i : i;
-        i = pressedColor != EMPTY ? ++i : i;
-        i = disabledColor != EMPTY ? ++i : i;
-        i = selectedColor != EMPTY ? ++i : i;
-        i = activatedColor != EMPTY ? ++i : i;
-        i = checkableColor != EMPTY ? ++i : i;
-        i = windowUnFocusedColor != EMPTY ? ++i : i;
-        return i;
-    }
-
 
     public void setTextColor(TextView v) {
         if (mTextColor != null) {
@@ -331,18 +82,11 @@ public final class SnbColorSelector {
     }
 
     public static class Builder {
-        private int normalColor = EMPTY;
-        private int checkedColor = EMPTY;
-        private int focusedColor = EMPTY;
-        private int hoveredColor = EMPTY;
-        private int pressedColor = EMPTY;
-        private int disabledColor = EMPTY;
-        private int selectedColor = EMPTY;
-        private int activatedColor = EMPTY;
-        private int checkableColor = EMPTY;
-        private int windowUnFocusedColor = EMPTY;
+
+        private Map<SnbSelectState, ColorBean> mColorBeanHashMap = new HashMap<>();
 
         public Builder() {
+            this(0xFF5D5D5D);
         }
 
         /**
@@ -350,18 +94,18 @@ public final class SnbColorSelector {
          *
          * @param normalColor 默认状态下的文字颜色
          */
-        public Builder(@NonNull int normalColor) {
-            this.normalColor = normalColor;
+        public Builder(@ColorInt int normalColor) {
+            normal(normalColor);
         }
 
         /**
          * 默认状态下的文字颜色
          *
-         * @param normalColor 文字颜色
+         * @param color 文字颜色
          * @return Builder
          */
-        public Builder normal(int normalColor) {
-            this.normalColor = normalColor;
+        public Builder normal(@ColorInt int color) {
+            setColor(SnbSelectState.NORMAL, color);
             return this;
         }
 
@@ -371,8 +115,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder checked(int color) {
-            this.checkedColor = color;
+        public Builder checked(@ColorInt int color) {
+            setColor(SnbSelectState.CHECKED, color);
             return this;
         }
 
@@ -382,8 +126,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder focused(int color) {
-            this.focusedColor = color;
+        public Builder focused(@ColorInt int color) {
+            setColor(SnbSelectState.FOCUSED, color);
             return this;
         }
 
@@ -393,8 +137,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder hovered(int color) {
-            this.hoveredColor = color;
+        public Builder hovered(@ColorInt int color) {
+            setColor(SnbSelectState.HOVERED, color);
             return this;
         }
 
@@ -404,8 +148,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder pressed(int color) {
-            this.pressedColor = color;
+        public Builder pressed(@ColorInt int color) {
+            setColor(SnbSelectState.PRESSED, color);
             return this;
         }
 
@@ -415,8 +159,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder disabled(int color) {
-            this.disabledColor = color;
+        public Builder disabled(@ColorInt int color) {
+            setColor(SnbSelectState.DISABLED, color);
             return this;
         }
 
@@ -426,8 +170,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder selected(int color) {
-            this.selectedColor = color;
+        public Builder selected(@ColorInt int color) {
+            setColor(SnbSelectState.SELECTED, color);
             return this;
         }
 
@@ -437,8 +181,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder activated(int color) {
-            this.activatedColor = color;
+        public Builder activated(@ColorInt int color) {
+            setColor(SnbSelectState.ACTIVATED, color);
             return this;
         }
 
@@ -448,8 +192,8 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder checkable(int color) {
-            this.checkableColor = color;
+        public Builder checkable(@ColorInt int color) {
+            setColor(SnbSelectState.CHECKABLE, color);
             return this;
         }
 
@@ -459,13 +203,77 @@ public final class SnbColorSelector {
          * @param color 文字颜色
          * @return Builder
          */
-        public Builder windowUnFocused(int color) {
-            this.windowUnFocusedColor = color;
+        public Builder windowUnFocused(@ColorInt int color) {
+            setColor(SnbSelectState.WINDOW_UN_FOCUSED, color);
+            return this;
+        }
+
+        /**
+         * 设置颜色
+         */
+        private void setColor(SnbSelectState state, @ColorInt int color) {
+            ColorBean bean = mColorBeanHashMap.get(state);
+            if (bean == null) {
+                bean = new ColorBean();
+                mColorBeanHashMap.put(state, bean);
+            }
+            bean.setColor(color);
+            bean.setSelectState(state);
+        }
+
+        /**
+         * 移除对应状态的颜色
+         */
+        public Builder removeStateColor(SnbSelectState state) {
+            if (state == SnbSelectState.NORMAL) {
+                throw new IllegalArgumentException("默认状态不可移除");
+            }
+            mColorBeanHashMap.remove(state);
             return this;
         }
 
         public SnbColorSelector build() {
-            return new SnbColorSelector(this);
+            ColorBean[] colorBeans = new ColorBean[mColorBeanHashMap.size()];
+            int k = 0;
+            /**
+             * @note 这里按状态顺序添加到列表中，不能随意改变
+             */
+            for (SnbSelectState state : SnbSelectState.getSelectStatesList()) {
+                ColorBean bean = mColorBeanHashMap.get(state);
+                if (bean != null) {
+                    colorBeans[k] = bean.copy();
+                    k++;
+                }
+            }
+            return new SnbColorSelector(colorBeans);
+        }
+    }
+
+    private static class ColorBean {
+
+        private int color;
+        private SnbSelectState mSelectState;
+        private int[] stateArray;
+
+        ColorBean copy() {
+            ColorBean colorBean = new ColorBean();
+            colorBean.color = color;
+            colorBean.mSelectState = mSelectState;
+            return colorBean;
+        }
+
+        /**
+         * 设置颜色
+         */
+        void setColor(@ColorInt int color) {
+            this.color = color;
+        }
+
+        /**
+         * 状态类型
+         */
+        void setSelectState(SnbSelectState selectState) {
+            this.mSelectState = selectState;
         }
     }
 }

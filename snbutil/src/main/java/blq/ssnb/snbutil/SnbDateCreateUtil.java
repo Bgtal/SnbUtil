@@ -53,10 +53,13 @@ public class SnbDateCreateUtil {
     }
 
     public static <T> List<T> createListData(DataCreateFactory<T> createFactory) {
-        try {
-            Thread.sleep(createFactory.minDelayTime());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (createFactory.minDelayTime() != 0) {
+            //如果延迟时间等于0 那就直接跳过休眠
+            try {
+                Thread.sleep(createFactory.minDelayTime());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         List<T> array = new ArrayList<>();
         for (int i = 0; i < createFactory.dataSize(); i++) {
@@ -77,20 +80,24 @@ public class SnbDateCreateUtil {
 
         @Override
         protected List<T> doInBackground(Integer... integers) {
-            int length = 20;
-            if (integers.length > 0) {
-                length = integers[0];
-            }
-            try {
-                Thread.sleep(mCreateFactory.minDelayTime());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (mCreateFactory.minDelayTime() != 0) {
+                try {
+                    Thread.sleep(mCreateFactory.minDelayTime());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
-            List<T> array = new ArrayList<>();
-            for (int i = 0; i < length; i++) {
-                array.add(mCreateFactory.createData(i));
+            if (integers == null) {
+                integers = new Integer[]{mCreateFactory.dataSize()};
             }
+            List<T> array = new ArrayList<>();
+            for (int length : integers) {
+                for (int i = 0; i < length; i++) {
+                    array.add(mCreateFactory.createData(i));
+                }
+            }
+
             return array;
         }
 

@@ -1,10 +1,16 @@
 package blq.ssnb.snbutil.kit;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.view.View;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <pre>
@@ -21,279 +27,45 @@ import android.view.View;
 
 public final class SnbDrawableSelector {
 
-    /**
-     * 9中变化状态
-     */
-    private static int checked = android.R.attr.state_checked;
-    private static int unChecked = -checked;
-
-    private static int focused = android.R.attr.state_focused;
-    private static int unFocused = -focused;
-
-    private static int hovered = android.R.attr.state_hovered;
-    private static int unHovered = -hovered;
-
-    private static int pressed = android.R.attr.state_pressed;
-    private static int unPressed = -pressed;
-
-    private static int enabled = android.R.attr.state_enabled;
-    private static int unEnabled = -enabled;
-
-    private static int selected = android.R.attr.state_selected;
-    private static int unSelected = -selected;
-
-    private static int activated = android.R.attr.state_activated;
-    private static int unActivated = -activated;
-
-    private static int checkable = android.R.attr.state_checkable;
-    private static int unCheckable = -checkable;
-
-    private static int windowFocused = android.R.attr.state_window_focused;
-    private static int unWindowFocused = -windowFocused;
-
-    /**
-     * 10中状态对应显示的图片
-     */
-    private Drawable normalDraw;
-    private Drawable checkedDraw;
-    private Drawable focusedDraw;
-    private Drawable hoveredDraw;
-    private Drawable pressedDraw;
-    private Drawable disabledDraw;
-    private Drawable selectedDraw;
-    private Drawable activatedDraw;
-    private Drawable checkableDraw;
-    private Drawable windowUnFocusedDraw;
-
     private StateListDrawable mDrawable;
 
-    /**
-     * 10中状态对应的匹配规则
-     */
-    private int[] normalState;
-    private int[] checkedState;
-    private int[] focusedState;
-    private int[] hoveredState;
-    private int[] pressedState;
-    private int[] disabledState;
-    private int[] selectedState;
-    private int[] activatedState;
-    private int[] checkableState;
-    private int[] windowFocusedState;
+    private DrawableBean[] mDrawableBeans;
 
-    private SnbDrawableSelector(Builder builder) {
-        this.normalDraw = builder.normalDraw;
-        this.checkedDraw = builder.checkedDraw;
-        this.focusedDraw = builder.focusedDraw;
-        this.hoveredDraw = builder.hoveredDraw;
-        this.pressedDraw = builder.pressedDraw;
-        this.disabledDraw = builder.disabledDraw;
-        this.selectedDraw = builder.selectedDraw;
-        this.activatedDraw = builder.activatedDraw;
-        this.checkableDraw = builder.checkableDraw;
-        this.windowUnFocusedDraw = builder.windowUnFocusedDraw;
+    private SnbDrawableSelector(DrawableBean[] drawableBeans) {
+        mDrawableBeans = drawableBeans;
+        initStates(drawableBeans);
+
         mDrawable = getStateListDrawable();
     }
 
+    private void initStates(DrawableBean[] drawableBeans) {
+        int k = 0;
+        for (DrawableBean bean : drawableBeans) {
+            if (bean.mSelectState.equals(SnbSelectState.NORMAL)) {
+                continue;
+            }
+            for (DrawableBean item : drawableBeans) {
+                int vale = item.equals(bean) ? bean.mSelectState.getStateValue() : bean.mSelectState.getUnStateValue();
+                if (item.stateArray == null) {
+                    item.stateArray = new int[drawableBeans.length - 1];
+                }
+                item.stateArray[k] = vale;
+            }
+            k++;
+        }
+
+    }
+
     private StateListDrawable getStateListDrawable() {
-        if (initState() == 0) {
-            return null;
-        }
         StateListDrawable drawable = new StateListDrawable();
-        if (normalDraw != null) {
-            drawable.addState(normalState, normalDraw);
-        }
-        if (checkedDraw != null) {
-            drawable.addState(checkedState, checkedDraw);
-        }
-        if (focusedDraw != null) {
-            drawable.addState(focusedState, focusedDraw);
-        }
-        if (hoveredDraw != null) {
-            drawable.addState(hoveredState, hoveredDraw);
-        }
-        if (pressedDraw != null) {
-            drawable.addState(pressedState, pressedDraw);
-        }
-        if (disabledDraw != null) {
-            drawable.addState(disabledState, disabledDraw);
-        }
-        if (selectedDraw != null) {
-            drawable.addState(selectedState, selectedDraw);
-        }
-        if (activatedDraw != null) {
-            drawable.addState(activatedState, activatedDraw);
-        }
-        if (checkableDraw != null) {
-            drawable.addState(checkableState, checkableDraw);
-        }
-        if (windowUnFocusedDraw != null) {
-            drawable.addState(windowFocusedState, windowUnFocusedDraw);
+        for (DrawableBean bean : mDrawableBeans) {
+            if (bean.mSelectState == SnbSelectState.NORMAL) {
+                drawable.addState(new int[]{}, bean.mDrawable);
+            } else {
+                drawable.addState(bean.stateArray, bean.mDrawable);
+            }
         }
         return drawable;
-    }
-
-    /**
-     * 初始化状态
-     */
-    private int initState() {
-        int i = drawCount();
-        if (i == 0) {
-            return 0;
-        }
-        int size = i;
-        //因为normal状态没有true/false 选项所以个数要减一
-        i--;
-        normalState = new int[i];
-        checkedState = new int[i];
-        focusedState = new int[i];
-        hoveredState = new int[i];
-        pressedState = new int[i];
-        disabledState = new int[i];
-        selectedState = new int[i];
-        activatedState = new int[i];
-        checkableState = new int[i];
-        windowFocusedState = new int[i];
-        i--;
-
-        if (checkedDraw != null) {
-            normalState[i] = unChecked;
-            checkedState[i] = checked;
-            focusedState[i] = unChecked;
-            hoveredState[i] = unChecked;
-            pressedState[i] = unChecked;
-            disabledState[i] = unChecked;
-            selectedState[i] = unChecked;
-            activatedState[i] = unChecked;
-            checkableState[i] = unChecked;
-            windowFocusedState[i] = unChecked;
-            i--;
-        }
-        if (focusedDraw != null) {
-            normalState[i] = unFocused;
-            checkedState[i] = unFocused;
-            focusedState[i] = focused;
-            hoveredState[i] = unFocused;
-            pressedState[i] = unFocused;
-            disabledState[i] = unFocused;
-            selectedState[i] = unFocused;
-            activatedState[i] = unFocused;
-            checkableState[i] = unFocused;
-            windowFocusedState[i] = unFocused;
-            i--;
-        }
-
-        if (hoveredDraw != null) {
-            normalState[i] = unHovered;
-            checkedState[i] = unHovered;
-            focusedState[i] = unHovered;
-            hoveredState[i] = hovered;
-            pressedState[i] = unHovered;
-            disabledState[i] = unHovered;
-            selectedState[i] = unHovered;
-            activatedState[i] = unHovered;
-            checkableState[i] = unHovered;
-            windowFocusedState[i] = unHovered;
-            i--;
-        }
-        if (pressedDraw != null) {
-            normalState[i] = unPressed;
-            checkedState[i] = unPressed;
-            focusedState[i] = unPressed;
-            hoveredState[i] = unPressed;
-            pressedState[i] = pressed;
-            disabledState[i] = unPressed;
-            selectedState[i] = unPressed;
-            activatedState[i] = unPressed;
-            checkableState[i] = unPressed;
-            windowFocusedState[i] = unPressed;
-            i--;
-        }
-        if (disabledDraw != null) {
-            normalState[i] = enabled;
-            checkedState[i] = enabled;
-            focusedState[i] = enabled;
-            hoveredState[i] = enabled;
-            pressedState[i] = enabled;
-            disabledState[i] = unEnabled;
-            selectedState[i] = enabled;
-            activatedState[i] = enabled;
-            checkableState[i] = enabled;
-            windowFocusedState[i] = enabled;
-            i--;
-        }
-        if (selectedDraw != null) {
-            normalState[i] = unSelected;
-            checkedState[i] = unSelected;
-            focusedState[i] = unSelected;
-            hoveredState[i] = unSelected;
-            pressedState[i] = unSelected;
-            disabledState[i] = unSelected;
-            selectedState[i] = selected;
-            activatedState[i] = unSelected;
-            checkableState[i] = unSelected;
-            windowFocusedState[i] = unSelected;
-            i--;
-        }
-        if (activatedDraw != null) {
-            normalState[i] = unActivated;
-            checkedState[i] = unActivated;
-            focusedState[i] = unActivated;
-            hoveredState[i] = unActivated;
-            pressedState[i] = unActivated;
-            disabledState[i] = unActivated;
-            selectedState[i] = unActivated;
-            activatedState[i] = activated;
-            checkableState[i] = unActivated;
-            windowFocusedState[i] = unActivated;
-            i--;
-        }
-        if (checkableDraw != null) {
-            normalState[i] = unCheckable;
-            checkedState[i] = unCheckable;
-            focusedState[i] = unCheckable;
-            hoveredState[i] = unCheckable;
-            pressedState[i] = unCheckable;
-            disabledState[i] = unCheckable;
-            selectedState[i] = unCheckable;
-            activatedState[i] = unCheckable;
-            checkableState[i] = checkable;
-            windowFocusedState[i] = unCheckable;
-            i--;
-        }
-        if (windowUnFocusedDraw != null) {
-            normalState[i] = windowFocused;
-            checkedState[i] = windowFocused;
-            focusedState[i] = windowFocused;
-            hoveredState[i] = windowFocused;
-            pressedState[i] = windowFocused;
-            disabledState[i] = windowFocused;
-            selectedState[i] = windowFocused;
-            activatedState[i] = windowFocused;
-            checkableState[i] = windowFocused;
-            windowFocusedState[i] = unWindowFocused;
-        }
-        return size;
-    }
-
-    /**
-     * 得到设置的Draw的数量
-     *
-     * @return 状态个数
-     */
-    private int drawCount() {
-        int i = 0;
-        i = normalDraw != null ? ++i : i;
-        i = checkedDraw != null ? ++i : i;
-        i = focusedDraw != null ? ++i : i;
-        i = hoveredDraw != null ? ++i : i;
-        i = pressedDraw != null ? ++i : i;
-        i = disabledDraw != null ? ++i : i;
-        i = selectedDraw != null ? ++i : i;
-        i = activatedDraw != null ? ++i : i;
-        i = checkableDraw != null ? ++i : i;
-        i = windowUnFocusedDraw != null ? ++i : i;
-        return i;
     }
 
     /**
@@ -312,67 +84,66 @@ public final class SnbDrawableSelector {
      */
     public void setBackground(View view) {
         if (mDrawable != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                view.setBackground(mDrawable);
-            } else {
-                view.setBackgroundDrawable(mDrawable);
-            }
+            view.setBackground(mDrawable);
         }
     }
 
     public Drawable getNormalDraw() {
-        return normalDraw;
+        return getDrawable(SnbSelectState.NORMAL);
     }
 
     public Drawable getCheckedDraw() {
-        return checkedDraw;
+        return getDrawable(SnbSelectState.CHECKED);
     }
 
     public Drawable getFocusedDraw() {
-        return focusedDraw;
+        return getDrawable(SnbSelectState.FOCUSED);
     }
 
     public Drawable getHoveredDraw() {
-        return hoveredDraw;
+        return getDrawable(SnbSelectState.HOVERED);
     }
 
     public Drawable getPressedDraw() {
-        return pressedDraw;
+        return getDrawable(SnbSelectState.PRESSED);
     }
 
     public Drawable getDisabledDraw() {
-        return disabledDraw;
+        return getDrawable(SnbSelectState.DISABLED);
     }
 
     public Drawable getSelectedDraw() {
-        return selectedDraw;
+        return getDrawable(SnbSelectState.SELECTED);
     }
 
     public Drawable getActivatedDraw() {
-        return activatedDraw;
+        return getDrawable(SnbSelectState.ACTIVATED);
     }
 
     public Drawable getCheckableDraw() {
-        return checkableDraw;
+        return getDrawable(SnbSelectState.CHECKABLE);
     }
 
     public Drawable getWindowUnFocusedDraw() {
-        return windowUnFocusedDraw;
+        return getDrawable(SnbSelectState.WINDOW_UN_FOCUSED);
+    }
+
+    private Drawable getDrawable(SnbSelectState state) {
+        for (DrawableBean bean : mDrawableBeans) {
+            if (bean.mSelectState.equals(state)) {
+                return bean.mDrawable;
+            }
+        }
+        return null;
     }
 
     public static class Builder {
-        private Drawable normalDraw = null;
-        private Drawable checkedDraw = null;
-        private Drawable focusedDraw = null;
-        private Drawable hoveredDraw = null;
-        private Drawable pressedDraw = null;
-        private Drawable disabledDraw = null;
-        private Drawable selectedDraw = null;
-        private Drawable activatedDraw = null;
-        private Drawable checkableDraw = null;
-        private Drawable windowUnFocusedDraw = null;
+
+
+        private Map<SnbSelectState, DrawableBean> mDrawableMap = new HashMap<>();
 
         public Builder() {
+            this(new ColorDrawable());
         }
 
         /**
@@ -381,17 +152,17 @@ public final class SnbDrawableSelector {
          * @param normalDraw 默认状态下的背景
          */
         public Builder(@NonNull Drawable normalDraw) {
-            this.normalDraw = normalDraw;
+            normal(normalDraw);
         }
 
         /**
          * 默认状态下的背景
          *
-         * @param normalDraw 背景
+         * @param drawable 背景
          * @return Builder
          */
-        public Builder normal(Drawable normalDraw) {
-            this.normalDraw = normalDraw;
+        public Builder normal(Drawable drawable) {
+            setDrawable(SnbSelectState.NORMAL, drawable);
             return this;
         }
 
@@ -402,7 +173,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder checked(Drawable drawable) {
-            this.checkedDraw = drawable;
+            setDrawable(SnbSelectState.CHECKED, drawable);
             return this;
         }
 
@@ -413,7 +184,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder focused(Drawable drawable) {
-            this.focusedDraw = drawable;
+            setDrawable(SnbSelectState.FOCUSED, drawable);
             return this;
         }
 
@@ -424,7 +195,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder hovered(Drawable drawable) {
-            this.hoveredDraw = drawable;
+            setDrawable(SnbSelectState.HOVERED, drawable);
             return this;
         }
 
@@ -435,7 +206,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder pressed(Drawable drawable) {
-            this.pressedDraw = drawable;
+            setDrawable(SnbSelectState.PRESSED, drawable);
             return this;
         }
 
@@ -446,7 +217,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder disabled(Drawable drawable) {
-            this.disabledDraw = drawable;
+            setDrawable(SnbSelectState.DISABLED, drawable);
             return this;
         }
 
@@ -457,7 +228,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder selected(Drawable drawable) {
-            this.selectedDraw = drawable;
+            setDrawable(SnbSelectState.SELECTED, drawable);
             return this;
         }
 
@@ -468,7 +239,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder activated(Drawable drawable) {
-            this.activatedDraw = drawable;
+            setDrawable(SnbSelectState.ACTIVATED, drawable);
             return this;
         }
 
@@ -479,7 +250,7 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder checkable(Drawable drawable) {
-            this.checkableDraw = drawable;
+            setDrawable(SnbSelectState.CHECKABLE, drawable);
             return this;
         }
 
@@ -490,12 +261,68 @@ public final class SnbDrawableSelector {
          * @return Builder
          */
         public Builder windowUnFocused(Drawable drawable) {
-            this.windowUnFocusedDraw = drawable;
+            setDrawable(SnbSelectState.WINDOW_UN_FOCUSED, drawable);
+            return this;
+        }
+
+        private void setDrawable(SnbSelectState state, Drawable drawable) {
+            DrawableBean bean = mDrawableMap.get(state);
+            if (bean == null) {
+                bean = new DrawableBean();
+                mDrawableMap.put(state, bean);
+            }
+            bean.setDrawable(drawable);
+            bean.setSelectState(state);
+        }
+
+        public Builder removeStateDrawable(SnbSelectState state) {
+            if (state == SnbSelectState.NORMAL) {
+                throw new IllegalArgumentException("默认状态不可移除");
+            }
+            mDrawableMap.remove(state);
             return this;
         }
 
         public SnbDrawableSelector build() {
-            return new SnbDrawableSelector(this);
+            DrawableBean[] drawableBeans = new DrawableBean[mDrawableMap.size()];
+            int k = 0;
+            for (SnbSelectState state : SnbSelectState.getSelectStatesList()) {
+                DrawableBean bean = mDrawableMap.get(state);
+                if (bean != null) {
+                    drawableBeans[k] = bean.copy();
+                    k++;
+                }
+            }
+
+            return new SnbDrawableSelector(drawableBeans);
+        }
+    }
+
+    private static class DrawableBean {
+
+        private Drawable mDrawable;
+        private SnbSelectState mSelectState;
+        private int[] stateArray;
+
+        DrawableBean copy() {
+            DrawableBean colorBean = new DrawableBean();
+            colorBean.mDrawable = mDrawable;
+            colorBean.mSelectState = mSelectState;
+            return colorBean;
+        }
+
+        /**
+         * 设置颜色
+         */
+        void setDrawable(Drawable drawable) {
+            this.mDrawable = drawable;
+        }
+
+        /**
+         * 状态类型
+         */
+        void setSelectState(SnbSelectState selectState) {
+            this.mSelectState = selectState;
         }
     }
 }
