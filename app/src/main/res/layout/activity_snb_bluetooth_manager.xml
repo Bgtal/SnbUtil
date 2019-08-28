@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_is_support"
+                style="@style/CenterText"
+                android:text="是否支持蓝牙设备" />
+
+            <TextView
+                android:id="@+id/tv_is_support_lbe"
+                style="@style/CenterText"
+                android:text="是否支持蓝牙_LBE 设备" />
+
+            <Switch
+                android:id="@+id/switch_bluetooth_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="蓝牙状态" />
+
+            <TextView
+                android:id="@+id/tv_get_name"
+                style="@style/CenterText"
+                android:text="获得当前设备的蓝牙名称" />
+
+            <TextView
+                android:id="@+id/tv_get_address"
+                style="@style/CenterText"
+                android:text="获得当前设备的蓝牙地址" />
+
+            <TextView
+                android:id="@+id/tv_get_all_bound_device"
+                style="@style/CenterText"
+                android:text="获取已连接过的设备" />
+
+            <TextView
+                android:id="@+id/tv_make_discover"
+                style="@style/CenterText"
+                android:text="使当前设备可被发现" />
+
+            <Switch
+                android:id="@+id/switch_is_discovering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:enabled="false"
+                android:text="是否处于扫描状态中" />
+
+            <TextView
+                android:id="@+id/tv_open_discover"
+                style="@style/CenterText"
+                android:text="开启扫描" />
+
+            <TextView
+                android:id="@+id/tv_close_discover"
+                style="@style/CenterText"
+                android:text="关闭扫描" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="操作记录" />
+
+        <TextView
+            android:id="@+id/tv_clear_record_btn"
+            style="@style/CenterText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="清空" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_operation_records"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

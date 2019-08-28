@@ -10,11 +10,11 @@ allprojects {
     }
 }
 ```
-> implementation 'com.github.Bgtal:SnbUtil:0.0.7'
+> implementation 'com.github.Bgtal:SnbUtil:version'
 
 ## 项目依赖
 * 使用的时候需要在自己的项目中引用下面的包，不然会报错
-> com.android.support:appcompat-v7:28.0.0'  
+> implementation com.android.support:appcompat-v7:28.0.0'  
 
 <!-- # apk -->
 <!-- [apk下载](/app/apk/BaseConfigure.apk) -->

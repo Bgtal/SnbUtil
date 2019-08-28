@@ -2,6 +2,7 @@ package com.blq.ssnb.snbutil
 
 import blq.ssnb.baseconfigure.AbsApplication
 import blq.ssnb.baseconfigure.LogManager
+import blq.ssnb.manager.SnbBluetoothManager
 import blq.ssnb.snbutil.SnbLog
 import blq.ssnb.snbutil.SnbToast
 
@@ -23,6 +24,7 @@ class MApplication : AbsApplication() {
         SnbToast.init(this)
         SnbLog.getGlobalBuilder().isOpen(true)
         LogManager.openLog(false, false)
+        SnbBluetoothManager.init(this)
     }
 
     override fun initBugly() {
