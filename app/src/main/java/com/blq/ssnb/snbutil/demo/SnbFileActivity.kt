@@ -1,7 +1,7 @@
 package com.blq.ssnb.snbutil.demo
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import blq.ssnb.baseconfigure.BaseActivity
 import blq.ssnb.snbutil.SnbFileUtil
 import com.blq.ssnb.snbutil.R

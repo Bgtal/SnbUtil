@@ -1,6 +1,6 @@
 package blq.ssnb.snbutil.constant;
 
-import android.support.annotation.LongDef;
+import androidx.annotation.LongDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,7 +1,6 @@
 package com.blq.ssnb.snbutil.demo
 
 import android.content.res.ColorStateList
-import android.graphics.drawable.*
 import android.widget.TextView
 import blq.ssnb.baseconfigure.BaseActivity
 import blq.ssnb.snbutil.kit.SnbRippleCreateFactory

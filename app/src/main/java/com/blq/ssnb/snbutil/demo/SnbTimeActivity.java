@@ -2,8 +2,6 @@ package com.blq.ssnb.snbutil.demo;
 
 import android.view.View;
 
-import com.blq.snbview.listener.OnIntervalClickListener;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +14,7 @@ import blq.ssnb.snbutil.SnbLog;
 import blq.ssnb.snbutil.SnbTimeUtil;
 import blq.ssnb.snbutil.SnbToast;
 import blq.ssnb.snbutil.kit.SimpleTimeDifferenceFormat;
+import blq.ssnb.snbview.listener.OnIntervalClickListener;
 
 /**
  * <pre>

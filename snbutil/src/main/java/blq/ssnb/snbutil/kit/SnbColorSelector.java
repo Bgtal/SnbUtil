@@ -1,13 +1,11 @@
 package blq.ssnb.snbutil.kit;
 
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.support.annotation.ColorInt;
+
+import androidx.annotation.ColorInt;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

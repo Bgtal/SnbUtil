@@ -2,7 +2,6 @@ package com.blq.ssnb.snbutil.demo;
 
 import android.view.View;
 
-import com.blq.snbview.listener.OnIntervalClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.List;
 import blq.ssnb.baseconfigure.simple.MenuBean;
 import blq.ssnb.baseconfigure.simple.SimpleMenuActivity;
 import blq.ssnb.snbutil.SnbToast;
+import blq.ssnb.snbview.listener.OnIntervalClickListener;
 
 /**
  * <pre>

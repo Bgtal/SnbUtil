@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.support.annotation.RequiresPermission;
+import androidx.annotation.RequiresPermission;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

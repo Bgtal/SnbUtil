@@ -6,8 +6,8 @@ import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.Switch
 import android.widget.TextView
@@ -51,7 +51,7 @@ class SnbBluetoothManagerActivity : BaseActivity() {
 
 
     private lateinit var clearBtn: View
-    private lateinit var operationList: RecyclerView
+    private lateinit var operationList: androidx.recyclerview.widget.RecyclerView
     private var adapter = OperationRecordAdapter()
 
     override fun contentView(): Int = R.layout.activity_snb_bluetooth_manager
@@ -73,7 +73,7 @@ class SnbBluetoothManagerActivity : BaseActivity() {
         operationList = findViewById(R.id.rv_operation_records)
 
         operationList.adapter = adapter
-        operationList.layoutManager = LinearLayoutManager(context)
+        operationList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
     }
 
