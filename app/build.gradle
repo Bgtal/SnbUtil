@@ -31,7 +31,7 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.BaseConfigure
     debugImplementation project(path: ':snbutil')
-    releaseImplementation libs.snbutil
+    releaseImplementation libs.snbutilx
     implementation libs.baserecyclerviewadapterhelper
     implementation libs.snbview
 
