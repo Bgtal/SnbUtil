@@ -1,6 +1,7 @@
 package com.blq.ssnb.snbutil.demo;
 
 import android.view.View;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import blq.ssnb.baseconfigure.simple.MenuBean;
 import blq.ssnb.baseconfigure.simple.SimpleMenuActivity;
+import blq.ssnb.snbutil.SToast;
 import blq.ssnb.snbutil.SnbToast;
 import blq.ssnb.snbview.listener.OnIntervalClickListener;
 
@@ -100,6 +102,13 @@ public class SnbToastActivity extends SimpleMenuActivity {
                         new Thread(() -> SnbToast.showSmart("我是子线程方法:" + Thread.currentThread().toString())).start();
                     }
                 }));
+
+        menuBeans.add(new MenuBean().setMenuTitle("newToast").setOnClickListener(new OnIntervalClickListener() {
+            @Override
+            public void onEffectiveClick(View v) {
+                SToast.makeText(getContext(),"aaaaa", Toast.LENGTH_LONG).show();
+            }
+        }));
         return menuBeans;
     }
 }

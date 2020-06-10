@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import blq.ssnb.snbutil.constant.SnbTimeConstant;
 import blq.ssnb.snbutil.kit.TimeDifferenceFormat;
 
 /**
@@ -60,6 +61,14 @@ public class SnbTimeUtil {
      */
     public static String milliseconds2StringSafe(String format, long time){
         return date2StringSafe(format,new Date(time));
+    }
+
+    public static String seconds2String(String format,long secondTime){
+        return milliseconds2String(format,secondTime * SnbTimeConstant.ONE_SECONDS);
+    }
+
+    public static String seconds2StringSafe(String format,long secondTime){
+        return milliseconds2StringSafe(format,secondTime * SnbTimeConstant.ONE_SECONDS);
     }
 
     /**

@@ -58,16 +58,24 @@ public class SnbTimeConstant {
     /**
      * 半年 = 365/2 天
      */
-    public static final long HALF_A_YEAR = ONE_DAY * 365>>1;
+    public static final long HALF_A_YEAR = ONE_DAY * 365 >> 1;
     /**
      * 一年 = 365 天
      */
     public static final long ONE_YEAR = ONE_DAY * 365;
+
     @LongDef({ONE_SECONDS, ONE_MINUTES,
-            HALF_AN_HOUR , ONE_HOURS ,
-            HALF_A_DAY , ONE_DAY ,
-            ONE_WEEK , ONE_MONTH ,
-            HALF_A_YEAR , ONE_YEAR })
+            HALF_AN_HOUR, ONE_HOURS,
+            HALF_A_DAY, ONE_DAY,
+            ONE_WEEK, ONE_MONTH,
+            HALF_A_YEAR, ONE_YEAR})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TimeUtil{}
+    public @interface TimeUtil {
+    }
+
+    public static final String yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+    public static final String HH_mm_ss = "HH:mm:ss";
+    public static final String HH_mm = "HH:mm";
+    public static final String MM_dd = "MM-dd";
+
 }
