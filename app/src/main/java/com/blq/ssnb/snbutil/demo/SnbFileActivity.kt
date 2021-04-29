@@ -77,7 +77,7 @@ class SnbFileActivity : BaseActivity() {
 
     override fun operation() {
         super.operation()
-        rootFile = SnbFileUtil.getFile(SnbFileUtil.getSDCardPath())
+        rootFile = SnbFileUtil.sdCardPath?.let { SnbFileUtil.getFile(it) }!!
         navAdapter.addData(FileNavBean("根目录", rootFile))
         updateList(rootFile)
         rootFile.listFiles()

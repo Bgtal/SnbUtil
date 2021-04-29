@@ -42,14 +42,14 @@ class SnbLogActivity : SimpleMenuActivity() {
         menus.add(MenuBean().setMenuTitle("3.tagBuilder 控制开关")
                 .setMenuSubTitle("例如 SnbLog.getGlobalBuilder().isOpen(true)，那么 SnbLog.e() 等方法就会显示log，反之不会显示")
                 .setOnClickListener {
-                    SnbLog.getGlobalBuilder().isOpen(true);
+                    SnbLog.globalBuilder.isOpen(true);
                 })
 
         menus.add(MenuBean()
                 .setMenuTitle("4.tagBuilder 控制打印位置的显示")
                 .setMenuSubTitle("SnbLog.getGlobalBuilder().isShowLocation(true) true 将会把打印log的位置提示出来，方便查看代码中log的位置，一般用于相似log太多的定位")
                 .setOnClickListener {
-                    SnbLog.getGlobalBuilder().isShowLocation(true)
+                    SnbLog.globalBuilder.isShowLocation(true)
                 })
 
         menus.add(MenuBean()
@@ -57,13 +57,13 @@ class SnbLogActivity : SimpleMenuActivity() {
                 .setMenuSubTitle("SnbLog.getGlobalBuilder().isShowBorderLine(true) true 将会在log的上下位置用虚线分割，如果log太密集就不太好用了，建议在log少的情况下使用，" +
                         "方便在log中一眼看到log位置")
                 .setOnClickListener {
-                    SnbLog.getGlobalBuilder().isShowBorderLine(true)
+                    SnbLog.globalBuilder.isShowBorderLine(true)
                 })
         menus.add(MenuBean()
                 .setMenuTitle("6.tagBuilder 设置tag")
                 .setMenuSubTitle("SnbLog.getGlobalBuilder().setTag(newTag),可以设置tag")
                 .setOnClickListener {
-                    SnbLog.getGlobalBuilder().setTag("newTag")
+                    SnbLog.globalBuilder.setTag("newTag")
                 })
 
         menus.add(MenuBean().setMenuTitle("6.自定义一个Log 的 tagBuilder")

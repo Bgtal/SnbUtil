@@ -22,7 +22,7 @@ class MApplication : AbsApplication() {
 
     override fun initSnb() {
         SnbToast.init(this)
-        SnbLog.getGlobalBuilder().isOpen(true)
+        SnbLog.globalBuilder?.isOpen(true)
         LogManager.openLog(false, false)
         SnbBluetoothManager.init(this)
     }

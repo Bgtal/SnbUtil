@@ -108,53 +108,55 @@ class SnbBluetoothManagerActivity : BaseActivity() {
                 }
             }
         }
-        bluetoothSwitch.isChecked = SnbBluetoothManager.singleton().isEnabled
-        isDiscovering.isChecked = SnbBluetoothManager.singleton().isDiscovering
+        bluetoothSwitch.isChecked = SnbBluetoothManager.singleton()?.isEnabled ?: false
+        isDiscovering.isChecked = SnbBluetoothManager.singleton()?.isDiscovering ?: false
     }
 
     override fun bindEvent() {
         clearBtn.setOnClickListener { adapter.replaceData(ArrayList()) }
-        isSupportBtn.setOnClickListener { adapter.addData("是否拥有蓝牙模块:" + SnbBluetoothManager.singleton().isSupport) }
-        isSupportLBEBtn.setOnClickListener { adapter.addData("是否拥有蓝牙LE模块:" + SnbBluetoothManager.singleton().isSupportLE) }
-        getNameBtn.setOnClickListener { adapter.addData("获取设备蓝牙名称:" + SnbBluetoothManager.singleton().name) }
-        getAddressBtn.setOnClickListener { adapter.addData("获取设备蓝牙名称:" + SnbBluetoothManager.singleton().address) }
+        isSupportBtn.setOnClickListener { adapter.addData("是否拥有蓝牙模块:" + SnbBluetoothManager.singleton()?.isSupport) }
+        isSupportLBEBtn.setOnClickListener { adapter.addData("是否拥有蓝牙LE模块:" + SnbBluetoothManager.singleton()?.isSupportLE) }
+        getNameBtn.setOnClickListener { adapter.addData("获取设备蓝牙名称:" + SnbBluetoothManager.singleton()?.name) }
+        getAddressBtn.setOnClickListener { adapter.addData("获取设备蓝牙名称:" + SnbBluetoothManager.singleton()?.address) }
         getAllBoundDevices.setOnClickListener {
 
             var builder = StringBuilder("获取所有连接设备:")
-            val devices = SnbBluetoothManager.singleton().bondedDevices
-            builder.append(devices.size).append("\n")
+            val devices = SnbBluetoothManager.singleton()?.bondedDevices
+            builder.append(devices?.size).append("\n")
 
-            for (bl in devices) {
-                builder.append("设备:").append(bl.name).append("\n")
-                        .append("地址:").append(bl.address).append("\n")
-                        .append("状态:").append(bl.bondState).append("\n")
+            if (devices != null) {
+                for (bl in devices) {
+                    builder.append("设备:").append(bl.name).append("\n")
+                            .append("地址:").append(bl.address).append("\n")
+                            .append("状态:").append(bl.bondState).append("\n")
+                }
             }
             adapter.addData(builder.toString())
 
         }
         bluetoothSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                if (SnbBluetoothManager.singleton().isSupport) {
-                    SnbBluetoothManager.singleton().openBluetoothForResult(activity, REQUEST_CODE_OPEN_BLUETOOTH)
+                if (SnbBluetoothManager.singleton()?.isSupport == true) {
+                    SnbBluetoothManager.singleton()?.openBluetoothForResult(activity, REQUEST_CODE_OPEN_BLUETOOTH)
                 } else {
                     buttonView.isChecked = false
                 }
             } else {
-                SnbBluetoothManager.singleton().closeBluetoothForResult(activity, REQUEST_CODE_CLOSE_BLUETOOTH)
+                SnbBluetoothManager.singleton()?.closeBluetoothForResult(activity, REQUEST_CODE_CLOSE_BLUETOOTH)
             }
         }
 
-        openDiscover.setOnClickListener { SnbBluetoothManager.singleton().startDiscover() }
-        closeDiscover.setOnClickListener { SnbBluetoothManager.singleton().cancelDiscovery() }
+        openDiscover.setOnClickListener { SnbBluetoothManager.singleton()?.startDiscover() }
+        closeDiscover.setOnClickListener { SnbBluetoothManager.singleton()?.cancelDiscovery() }
         makeDiscover.setOnClickListener {
-            SnbBluetoothManager.singleton().startBeDiscoverEnable(activity,60)
+            SnbBluetoothManager.singleton()?.startBeDiscoverEnable(activity,60)
             adapter.addData("启动设备可发现")
         }
     }
 
     override fun operation() {
         super.operation()
-        registerReceiver(mBroadcastReceiver, SnbBluetoothManager.singleton().intentFilter)
+        registerReceiver(mBroadcastReceiver, SnbBluetoothManager.singleton()?.intentFilter)
     }
 
     override fun onDestroy() {
