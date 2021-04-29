@@ -1,5 +1,6 @@
 package com.blq.ssnb.snbutil
 
+import android.content.Context
 import blq.ssnb.baseconfigure.AbsApplication
 import blq.ssnb.baseconfigure.LogManager
 import blq.ssnb.manager.SnbBluetoothManager
@@ -37,5 +38,11 @@ class MApplication : AbsApplication() {
 
     override fun initSingle() {
 
+    }
+
+    companion object {
+        fun getContext(): Context? {
+            return AbsApplication.getContext()
+        }
     }
 }

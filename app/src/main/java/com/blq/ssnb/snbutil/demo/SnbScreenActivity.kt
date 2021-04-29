@@ -1,9 +1,12 @@
 package com.blq.ssnb.snbutil.demo
 
 import android.graphics.Bitmap
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import blq.ssnb.baseconfigure.AbsApplication.getContext
 import blq.ssnb.baseconfigure.simple.MenuBean
 import blq.ssnb.baseconfigure.simple.SimpleMenuActivity
 import blq.ssnb.snbutil.SnbLog.e
@@ -19,6 +22,7 @@ import blq.ssnb.snbutil.SnbScreenUtil.screenShot
 import blq.ssnb.snbutil.SnbToast.showSmart
 import com.blq.ssnb.snbutil.MApplication
 import com.blq.ssnb.snbutil.R
+import com.blq.ssnb.snbutil.databinding.ActivitySnbScreenBinding
 import com.blq.ssnb.snbutil.view.ShotCanvasView
 import com.blq.ssnb.snbutil.view.ShotCanvasView.OnActionListener
 import java.util.*
@@ -36,10 +40,18 @@ import java.util.*
 </pre> *
  */
 class SnbScreenActivity : SimpleMenuActivity() {
-    private var infoShowView: TextView? = null
-    private var screenShotShowView: ImageView? = null
-    private var shotRangeView: ShotCanvasView? = null
-    private var showRootView: View? = null
+    private lateinit var infoShowView: TextView
+    private lateinit var screenShotShowView: ImageView
+    private lateinit var shotRangeView: ShotCanvasView
+    private lateinit var showRootView: View
+    private lateinit var viewBinding: ActivitySnbScreenBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewBinding = ActivitySnbScreenBinding.inflate(layoutInflater)
+        val rootView = viewBinding.root
+        setContentView(rootView)
+    }
+
     override fun contentView(): Int {
         return R.layout.activity_snb_screen
     }
@@ -60,38 +72,38 @@ class SnbScreenActivity : SimpleMenuActivity() {
         val menuBeans: MutableList<MenuBean> = ArrayList()
         menuBeans.add(MenuBean()
                 .setMenuTitle("屏幕工具,主要是一些界面")
-                .setOnClickListener { v: View? -> showSmart("点击下面的按钮试一试功能吧") })
+                .setOnClickListener { showSmart(msg = "点击下面的按钮试一试功能吧") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获取App所在屏幕的宽度")
                 .setMenuSubTitle("如果有分屏，即分屏状态下app所占的宽度")
-                .setOnClickListener { v: View? -> updateInfo("APP所在屏幕宽度:" + getAppScreenWidth(activity) + "px") })
+                .setOnClickListener { updateInfo("APP所在屏幕宽度:" + getAppScreenWidth(activity) + "px") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获取屏幕的可用宽度(不包括导航栏)")
                 .setMenuSubTitle("屏幕显示的宽度,即使在分屏状态下，宽度依然是屏幕显示宽度")
-                .setOnClickListener { v: View? -> updateInfo("可用屏幕宽度:" + getAvailableScreenWidth(application) + "px") })
+                .setOnClickListener { updateInfo("可用屏幕宽度:" + getAvailableScreenWidth(application) + "px") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获取手机屏幕的真正宽度")
                 .setMenuSubTitle("包括底部导航栏的屏幕真正宽度")
-                .setOnClickListener { v: View? -> updateInfo("真正手机屏幕宽度:" + getFullScreenWidth(MApplication.getContext()) + "px") })
+                .setOnClickListener { updateInfo("真正手机屏幕宽度:" + getFullScreenWidth(MApplication.getContext()!!) + "px") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获取App所在屏幕的高度")
                 .setMenuSubTitle("如果有分屏,即分屏状态下app所占的高度")
-                .setOnClickListener { v: View? -> updateInfo("APP所在屏幕高度:" + getAppScreenHeight(activity) + "px") })
+                .setOnClickListener { updateInfo("APP所在屏幕高度:" + getAppScreenHeight(activity) + "px") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获取屏幕的可用高度(不包括导航栏)")
                 .setMenuSubTitle("屏幕的显示高度，即使在分屏状态下，高度依然是屏幕的显示高度")
-                .setOnClickListener { v: View? -> updateInfo("可用屏幕高度:" + getAvailableScreenHeight(application) + "px") })
+                .setOnClickListener { updateInfo("可用屏幕高度:" + getAvailableScreenHeight(application) + "px") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获取手机屏幕的真正高度")
                 .setMenuSubTitle("手机真正的高度，包含底部导航栏")
-                .setOnClickListener { v: View? -> updateInfo("真正手机屏幕高度:" + getFullScreenHeight(context) + "px") })
+                .setOnClickListener { updateInfo("真正手机屏幕高度:" + getFullScreenHeight(context) + "px") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获取顶部状态栏的高度")
-                .setOnClickListener { v: View? -> updateInfo("状态栏高度:" + getStatusHeight(context)) })
+                .setOnClickListener { updateInfo("状态栏高度:" + getStatusHeight(context)) })
         menuBeans.add(MenuBean()
                 .setMenuTitle("获得底部导航栏的高度")
                 .setMenuSubTitle("如果像华为这种可以手动缩放底部导航栏的，获取到的数据是不准确的")
-                .setOnClickListener { v: View? -> updateInfo("虚拟导航栏的高度:" + getNavigationHeight(context)) })
+                .setOnClickListener { updateInfo("虚拟导航栏的高度:" + getNavigationHeight(context)) })
         menuBeans.add(MenuBean()
                 .setMenuTitle("截取当前Item")
                 .setMenuSubTitle("以view为对象，截取view布局的对象")
@@ -99,17 +111,17 @@ class SnbScreenActivity : SimpleMenuActivity() {
         menuBeans.add(MenuBean()
                 .setMenuTitle("截取当前Activity")
                 .setMenuSubTitle("截取当前activity只是能获取当前activity所显示的界面")
-                .setOnClickListener { v: View? -> updateShotView(screenShot(activity)) })
+                .setOnClickListener { updateShotView(screenShot(activity)) })
         menuBeans.add(MenuBean()
                 .setMenuTitle("点击自定义截图")
                 .setMenuSubTitle("")
-                .setOnClickListener { v: View? -> shotRangeView!!.openShot() })
+                .setOnClickListener { shotRangeView!!.openShot() })
         return menuBeans
     }
 
     override fun bindEvent() {
         super.bindEvent()
-        shotRangeView!!.setOnActionListener(object : OnActionListener {
+        shotRangeView.setOnActionListener(object : OnActionListener {
             override fun onActionDown(sx: Float, sy: Float) {
                 updateInfo("起始位置:($sx,$sy)")
             }
@@ -124,27 +136,25 @@ class SnbScreenActivity : SimpleMenuActivity() {
         })
     }
 
-    private fun screenshot(sx: Float, sy: Float, ex: Float, ey: Float) {
-        var sx = sx
-        var sy = sy
-        var ex = ex
-        var ey = ey
+    private fun screenshot(sX: Float, sY: Float, eX: Float, eY: Float) {
+        var sx = sX
+        var sy = sY
+        var ex = eX
+        var ey = eY
         if (sx > ex) {
-            val tx: Float
-            tx = sx
+            val tx: Float = sx
             sx = ex
             ex = tx
         }
         if (sy > ey) {
-            val ty: Float
-            ty = sy
+            val ty: Float = sy
             sy = ey
             ey = ty
         }
         val w = ex - sx
         val h = ey - sy
         updateInfo("截屏大小:($w,$h)")
-        val bitmap = screenShot(showRootView!!, sx.toInt(), sy.toInt(), w.toInt(), h.toInt())
+        val bitmap = screenShot(showRootView, sx.toInt(), sy.toInt(), w.toInt(), h.toInt())
         if (bitmap != null) {
             updateShotView(bitmap)
         } else {
@@ -154,10 +164,10 @@ class SnbScreenActivity : SimpleMenuActivity() {
     }
 
     private fun updateInfo(msg: String) {
-        infoShowView!!.text = msg
+        infoShowView.text = msg
     }
 
     private fun updateShotView(bitmap: Bitmap?) {
-        screenShotShowView!!.setImageBitmap(bitmap)
+        screenShotShowView.setImageBitmap(bitmap)
     }
 }

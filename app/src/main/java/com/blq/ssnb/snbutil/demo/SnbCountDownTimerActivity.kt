@@ -43,7 +43,7 @@ class SnbCountDownTimerActivity : BaseActivity() {
         startPauseBtn = findViewById(R.id.tv_start_pause)
         restartBtn = findViewById(R.id.tv_restart_btn)
         stopBtn = findViewById(R.id.tv_stop_btn)
-        SnbCheckUtil.isMainThread()
+        SnbCheckUtil.isMainThread
 
     }
 
@@ -81,7 +81,7 @@ class SnbCountDownTimerActivity : BaseActivity() {
                     startPauseBtn.text = "开始倒计时"
                 }
             } else {
-                SnbToast.showSmart("请先初始化")
+                SnbToast.showSmart(msg = "请先初始化")
             }
         }
 
@@ -89,7 +89,7 @@ class SnbCountDownTimerActivity : BaseActivity() {
             if (countDownTimer != null) {
                 countDownTimer!!.restart()
             } else {
-                SnbToast.showSmart("请先初始化")
+                SnbToast.showSmart(msg = "请先初始化")
             }
         }
 
@@ -99,7 +99,7 @@ class SnbCountDownTimerActivity : BaseActivity() {
                     countDownTimer!!.stop()
                 }
             } else {
-                SnbToast.showSmart("请先初始化")
+                SnbToast.showSmart(msg = "请先初始化")
             }
         }
     }

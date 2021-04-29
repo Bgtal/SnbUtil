@@ -206,10 +206,10 @@ object SnbTimeUtil {
         if (isSafe) {
             //如果线程安全就调用缓存里面的
             if (FORMAT_CACHE[format] != null) {
+                sf = FORMAT_CACHE[format]!!
+            } else {
                 sf = SimpleDateFormat(format, Locale.getDefault())
                 FORMAT_CACHE[format] = sf
-            } else {
-                sf = FORMAT_CACHE[format]!!
             }
         } else { //如果线程是不安全的那么就实时创建
             sf = SimpleDateFormat(format, Locale.getDefault())
@@ -236,7 +236,7 @@ object SnbTimeUtil {
      */
     @JvmStatic
     fun isLeapYear(year: Int): Boolean {
-        return year % 4 == 0 && year % 100 != 0 || year % 400 == 0
+        return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
     }
 
     /**

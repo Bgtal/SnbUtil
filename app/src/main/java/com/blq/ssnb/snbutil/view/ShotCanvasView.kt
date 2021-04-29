@@ -22,7 +22,7 @@ import blq.ssnb.snbutil.SnbLog.e
 </pre> *
  */
 class ShotCanvasView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
-    private val mPaint: Paint
+    private val mPaint: Paint = Paint()
     private val mPath: Path
     private val outPath: Path
     var w = 0
@@ -110,7 +110,6 @@ class ShotCanvasView @JvmOverloads constructor(context: Context?, attrs: Attribu
     }
 
     init {
-        mPaint = Paint()
         mPaint.color = -0x78666667
         mPath = Path()
         outPath = Path()

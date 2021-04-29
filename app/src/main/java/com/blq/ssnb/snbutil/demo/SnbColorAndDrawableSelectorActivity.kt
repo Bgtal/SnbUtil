@@ -53,7 +53,7 @@ class SnbColorAndDrawableSelectorActivity : BaseActivity() {
     }
 
     override fun bindEvent() {
-        demoView.setOnClickListener { SnbToast.showSmart("demo") }
+        demoView.setOnClickListener { SnbToast.showSmart(msg = "demo") }
         styleCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
             buttonView.text = if (isChecked) {
                 changeColorSelector()
