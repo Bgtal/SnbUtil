@@ -35,7 +35,7 @@ class SnbToastActivity : SimpleMenuActivity() {
                 .setOnClickListener(object : OnIntervalClickListener() {
                     override fun onEffectiveClick(v: View) {
                         init(applicationContext)
-                        showSmart("初始化成功")
+                        showSmart(msg = "初始化成功")
                     }
                 }))
         menuBeans.add(MenuBean()
@@ -43,7 +43,7 @@ class SnbToastActivity : SimpleMenuActivity() {
                 .setMenuSubTitle("使用方法 SnbToast.showLong();")
                 .setOnClickListener(object : OnIntervalClickListener() {
                     override fun onEffectiveClick(v: View) {
-                        showLong("我是一个长显示")
+                        showLong(msg = "我是一个长显示")
                     }
                 }))
         menuBeans.add(MenuBean()
@@ -51,7 +51,7 @@ class SnbToastActivity : SimpleMenuActivity() {
                 .setMenuSubTitle("使用方法 SnbToast.showShort();")
                 .setOnClickListener(object : OnIntervalClickListener() {
                     override fun onEffectiveClick(v: View) {
-                        showShort("我是一个短显示")
+                        showShort(msg = "我是一个短显示")
                     }
                 }))
         menuBeans.add(MenuBean()
@@ -61,9 +61,9 @@ class SnbToastActivity : SimpleMenuActivity() {
                     private var isShowLong = false
                     override fun onEffectiveClick(v: View) {
                         if (isShowLong) {
-                            showSmart("长度大于20个长度的时候,会调用toast的Toast.LENGTH_LONG属性")
+                            showSmart(msg = "长度大于20个长度的时候,会调用toast的Toast.LENGTH_LONG属性")
                         } else {
-                            showSmart("长度短显示时间短")
+                            showSmart(msg = "长度短显示时间短")
                         }
                         isShowLong = !isShowLong
                     }
@@ -74,15 +74,15 @@ class SnbToastActivity : SimpleMenuActivity() {
                 .setOnClickListener(object : OnIntervalClickListener() {
                     override fun onEffectiveClick(v: View) {
                         showSmart(context, "使用Context调用的Toast不会被后面调用的Toast覆盖掉")
-                        showSmart("我是紧跟着的第一个全局Toast")
-                        showSmart("我是紧跟着的第二个全局Toast")
+                        showSmart(msg = "我是紧跟着的第一个全局Toast")
+                        showSmart(msg = "我是紧跟着的第二个全局Toast")
                     }
                 }))
         menuBeans.add(MenuBean()
                 .setMenuTitle("两种方式都可以在子线程里面直接调用")
                 .setOnClickListener(object : OnIntervalClickListener() {
                     override fun onEffectiveClick(v: View) {
-                        Thread { showSmart("我是子线程方法:" + Thread.currentThread().toString()) }.start()
+                        Thread { showSmart(msg = "我是子线程方法:" + Thread.currentThread().toString()) }.start()
                     }
                 }))
         return menuBeans

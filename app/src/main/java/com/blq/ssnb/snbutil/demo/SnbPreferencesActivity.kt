@@ -23,12 +23,12 @@ import java.util.*
 </pre> *
  */
 class SnbPreferencesActivity : SimpleMenuActivity() {
-    private var mPreferences: SnbPreferences? = null
-    private var saveKeyEdit: EditText? = null
-    private var saveValueEdit: EditText? = null
-    private var readKeyEdit: EditText? = null
-    private var readValueView: TextView? = null
-    private var saveContentView: TextView? = null
+    private lateinit var mPreferences: SnbPreferences
+    private lateinit var saveKeyEdit: EditText
+    private lateinit var saveValueEdit: EditText
+    private lateinit var readKeyEdit: EditText
+    private lateinit var readValueView: TextView
+    private lateinit var saveContentView: TextView
     override fun contentView(): Int {
         return R.layout.activity_snb_preferences
     }
@@ -56,82 +56,81 @@ class SnbPreferencesActivity : SimpleMenuActivity() {
         beans.add(MenuBean()
                 .setMenuTitle("保存数据")
                 .setMenuSubTitle("使用mPreferences.save(key,value) 方法保存要存入的值")
-                .setOnClickListener { v: View? ->
-                    val key = saveKeyEdit!!.text.toString()
-                    if (key.trim { it <= ' ' }.length == 0) {
-                        showSmart("key不能为空")
-                        return@setOnClickListener
+                .setOnClickListener { _: View? ->
+                    val key = saveKeyEdit.text.toString()
+                    if (key.trim { it <= ' ' }.isEmpty()) {
+                        showSmart(msg = "key不能为空")
+                    }else{
+                        val value = saveValueEdit.text.toString()
+                        mPreferences.save(key, value)
+                        updateContentView()
                     }
-                    val value = saveValueEdit!!.text.toString()
-                    mPreferences!!.save(key, value)
-                    updateContentView()
                 })
         beans.add(MenuBean()
                 .setMenuTitle("读取数据")
                 .setMenuSubTitle("读取数据需要使用对应的read方法，例如读取String使用mPreferences.readString(key)")
-                .setOnClickListener { v: View? ->
-                    val key = readKeyEdit!!.text.toString()
-                    if (key.trim { it <= ' ' }.length == 0) {
-                        showSmart("key不能为空")
-                        return@setOnClickListener
-                    }
-                    try {
-                        var value = mPreferences!!.readString(key)
-                        if (value == "") {
-                            value = "value 不存在"
+                .setOnClickListener { _: View? ->
+                    val key = readKeyEdit.text.toString()
+                    if (key.trim { it <= ' ' }.isEmpty()) {
+                        showSmart(msg = "key不能为空")
+                    }else{
+                        try {
+                            var value = mPreferences.readString(key)
+                            if (value == "") {
+                                value = "value 不存在"
+                            }
+                            readValueView.text = value
+                        } catch (e: Exception) {
+                            showSmart(msg = "Demo 只写了读取String类型的Value方法,读取其他类型请使用相应的read方法")
                         }
-                        readValueView!!.text = value
-                    } catch (e: Exception) {
-                        showSmart("Demo 只写了读取String类型的Value方法,读取其他类型请使用相应的read方法")
                     }
                 }
         )
         beans.add(MenuBean()
                 .setMenuTitle("移除key")
                 .setOnClickListener { v: View? ->
-                    val key = readKeyEdit!!.text.toString()
-                    if (key.trim { it <= ' ' }.length == 0) {
-                        showSmart("key不能为空")
-                        return@setOnClickListener
+                    val key = readKeyEdit.text.toString()
+                    if (key.trim { it <= ' ' }.isEmpty()) {
+                        showSmart(msg = "key不能为空")
+                    }else{
+                        mPreferences.remove(key)
+                        var value = mPreferences.readString(key)
+                        if (value == "") {
+                            value = "value 不存在"
+                        }
+                        readValueView.text = value
+                        updateContentView()
                     }
-                    mPreferences!!.remove(key)
-                    var value = mPreferences!!.readString(key)
-                    if (value == "") {
-                        value = "value 不存在"
-                    }
-                    readValueView!!.text = value
-                    updateContentView()
                 })
         beans.add(MenuBean().setMenuTitle("清理内容")
-                .setOnClickListener { v: View? ->
-                    mPreferences!!.clear()
+                .setOnClickListener { _: View? ->
+                    mPreferences.clear()
                     updateContentView()
-                    showSmart("清理完成")
+                    showSmart(msg = "清理完成")
                 }
         )
         beans.add(MenuBean()
                 .setMenuTitle("添加所有类型")
-                .setOnClickListener { v: View? ->
-                    mPreferences!!.save("tkey_1", 10001)
-                    mPreferences!!.save("tkey_2", true)
-                    mPreferences!!.save("tkey_3", 12.4f)
-                    mPreferences!!.save("tkey_4", 3555533343342342323L)
-                    mPreferences!!.save("tkey_5", "我是String")
+                .setOnClickListener { _: View? ->
+                    mPreferences.save("tkey_1", 10001)
+                    mPreferences.save("tkey_2", true)
+                    mPreferences.save("tkey_3", 12.4f)
+                    mPreferences.save("tkey_4", 3555533343342342323L)
+                    mPreferences.save("tkey_5", "我是String")
                     val set: MutableSet<String?> = HashSet()
                     for (i in 0..4) {
                         set.add("set-$i")
                     }
-                    mPreferences!!.save("tkey_6", set)
-                    showSmart("添加所有类型的Value")
+                    mPreferences.save("tkey_6", set)
+                    showSmart(msg = "添加所有类型的Value")
                     updateContentView()
                 })
         return beans
     }
 
     private fun updateContentView() {
-        saveContentView!!.text = """
-            存储xml文件:${mPreferences!!.fileName}
-            内容:${mPreferences!!.readAll()}
-            """.trimIndent()
+        val sn = """存储xml文件:${mPreferences.fileName} 
+            |内容:${mPreferences.readAll()}""".trimMargin()
+        saveContentView.text = sn
     }
 }

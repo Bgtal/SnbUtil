@@ -39,7 +39,7 @@ class SnbTimeActivity : SimpleMenuActivity() {
         menuBeans.add(MenuBean()
                 .setMenuTitle("该工具包含了普通的时间转换方法")
                 .setMenuSubTitle("format方法包含了safe后缀方法和普通方法,区别就是safe每次都会new一个SimpleDateFormat，而普通的会从缓存里面拿")
-                .setOnClickListener { v: View? -> showToast("使用下面的方法吧") })
+                .setOnClickListener { showToast("使用下面的方法吧") })
         menuBeans.add(MenuBean()
                 .setMenuTitle("时间转换1、date 对象转换")
                 .setMenuSubTitle("使用方法:SnbTimeUtil.date2String")
@@ -123,6 +123,6 @@ class SnbTimeActivity : SimpleMenuActivity() {
     }
 
     private fun showToast(msg: String) {
-        showSmart(msg)
+        showSmart(msg = msg)
     }
 }
