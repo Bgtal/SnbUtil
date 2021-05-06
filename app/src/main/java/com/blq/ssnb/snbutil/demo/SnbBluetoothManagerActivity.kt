@@ -88,7 +88,7 @@ class SnbBluetoothManagerActivity : BaseActivity() {
                     }
                     BluetoothDevice.ACTION_FOUND -> {
                         val bluetoothDevice = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                        adapter.addData("找到蓝牙设备:${bluetoothDevice.name} - ${bluetoothDevice.address}")
+                        adapter.addData("找到蓝牙设备:${bluetoothDevice?.name} - ${bluetoothDevice?.address}")
                     }
                     //找到设备的广播
                     BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
@@ -149,7 +149,7 @@ class SnbBluetoothManagerActivity : BaseActivity() {
         openDiscover.setOnClickListener { SnbBluetoothManager.singleton()?.startDiscover() }
         closeDiscover.setOnClickListener { SnbBluetoothManager.singleton()?.cancelDiscovery() }
         makeDiscover.setOnClickListener {
-            SnbBluetoothManager.singleton()?.startBeDiscoverEnable(activity,60)
+            SnbBluetoothManager.singleton()?.startBeDiscoverEnable(activity, 60)
             adapter.addData("启动设备可发现")
         }
     }

@@ -1,8 +1,11 @@
 package com.blq.ssnb.snbutil.demo
 
+import android.view.View
 import blq.ssnb.baseconfigure.simple.MenuBean
 import blq.ssnb.baseconfigure.simple.SimpleMenuActivity
 import blq.ssnb.snbutil.SnbLog
+import blq.ssnb.snbutil.SnbToast
+import blq.ssnb.snbview.listener.OnIntervalClickListener
 
 /**
  *
@@ -30,9 +33,15 @@ class SnbLogActivity : SimpleMenuActivity() {
         menus.add(MenuBean().setMenuTitle("1.打就或关闭所有的Log打印")
                 .setMenuSubTitle("使用SnbLog.setGlobalLogPrint(boolean),false 将拦截所有的SnbLog的打印方法，" +
                         "true,将开启打印，具体是否打印需要看对应的tagBuilder的配置")
-                .setOnClickListener {
-                    SnbLog.setGlobalLogPrint(true)
-                })
+                .setOnClickListener(object : OnIntervalClickListener() {
+                    var isOpen = true
+                    override fun onEffectiveClick(v: View?) {
+                        isOpen = !isOpen
+                        SnbToast.showShort(msg = "打开所有LOG打印:$isOpen")
+                        SnbLog.setGlobalLogPrint(isOpen)
+
+                    }
+                }))
         menus.add(MenuBean()
                 .setMenuTitle("2.tagBuilder配置")
                 .setMenuSubTitle("tagBuilder配置分为两种，一种是默认的，SnbLog.getGlobalBuilder()，" +
@@ -41,9 +50,15 @@ class SnbLogActivity : SimpleMenuActivity() {
 
         menus.add(MenuBean().setMenuTitle("3.tagBuilder 控制开关")
                 .setMenuSubTitle("例如 SnbLog.getGlobalBuilder().isOpen(true)，那么 SnbLog.e() 等方法就会显示log，反之不会显示")
-                .setOnClickListener {
-                    SnbLog.globalBuilder.isOpen(true);
-                })
+                .setOnClickListener(object : OnIntervalClickListener() {
+                    var isOpen = true
+                    override fun onEffectiveClick(v: View?) {
+                        isOpen = !isOpen
+                        SnbToast.showShort(msg = "默认Global Log打开:$isOpen")
+                        SnbLog.globalBuilder.isOpen(isOpen)
+                    }
+
+                }))
 
         menus.add(MenuBean()
                 .setMenuTitle("4.tagBuilder 控制打印位置的显示")

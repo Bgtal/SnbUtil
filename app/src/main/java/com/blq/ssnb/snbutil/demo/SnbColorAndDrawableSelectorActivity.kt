@@ -87,16 +87,16 @@ class SnbColorAndDrawableSelectorActivity : BaseActivity() {
 
     private fun changeDrawableSelector() {
         val builder = SnbDrawableSelector.Builder()
-                .windowUnFocused(context.getDrawable(R.drawable.icon_drawable_window_un_focused))
-                .checkable(context.getDrawable(R.drawable.icon_drawable_checked))
-                .activated(context.getDrawable(R.drawable.icon_drawable_activated))
-                .selected(context.getDrawable(R.drawable.icon_drawable_selected))
-                .disabled(context.getDrawable(R.drawable.icon_drawable_disabled))
-                .pressed(context.getDrawable(R.drawable.icon_drawable_pressed))
-                .hovered(context.getDrawable(R.drawable.icon_drawable_hovered))
+                .windowUnFocused(context.getDrawable(R.drawable.icon_drawable_window_un_focused)!!)
+                .checkable(context.getDrawable(R.drawable.icon_drawable_checked)!!)
+                .activated(context.getDrawable(R.drawable.icon_drawable_activated)!!)
+                .selected(context.getDrawable(R.drawable.icon_drawable_selected)!!)
+                .disabled(context.getDrawable(R.drawable.icon_drawable_disabled)!!)
+                .pressed(context.getDrawable(R.drawable.icon_drawable_pressed)!!)
+                .hovered(context.getDrawable(R.drawable.icon_drawable_hovered)!!)
 //                .focused(resources.getDrawable(R.drawable.icon_drawable_focused))
-                .checked(context.getDrawable(R.drawable.icon_drawable_checked))
-                .normal(context.getDrawable(R.drawable.icon_drawable_normal));
+                .checked(context.getDrawable(R.drawable.icon_drawable_checked)!!)
+                .normal(context.getDrawable(R.drawable.icon_drawable_normal)!!);
 //                .build()
 
         demoView.setTextColor(Color.BLACK)

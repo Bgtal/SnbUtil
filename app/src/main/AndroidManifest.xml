@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
@@ -36,6 +37,7 @@
         <activity android:name=".demo.SnbRippleActivity" />
         <activity android:name=".demo.SnbColorAndDrawableSelectorActivity" />
         <activity android:name=".demo.SnbBluetoothManagerActivity" />
+        <activity android:name=".demo.SnbUtilActivity" />
     </application>
 
 </manifest>

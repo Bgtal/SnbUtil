@@ -3,6 +3,7 @@ package com.blq.ssnb.snbutil.demo
 import android.view.View
 import blq.ssnb.baseconfigure.simple.MenuBean
 import blq.ssnb.baseconfigure.simple.SimpleMenuActivity
+import blq.ssnb.snbutil.SnbLog
 import blq.ssnb.snbutil.SnbToast.init
 import blq.ssnb.snbutil.SnbToast.showLong
 import blq.ssnb.snbutil.SnbToast.showShort
@@ -85,6 +86,26 @@ class SnbToastActivity : SimpleMenuActivity() {
                         Thread { showSmart(msg = "我是子线程方法:" + Thread.currentThread().toString()) }.start()
                     }
                 }))
+
+        menuBeans.add(MenuBean().setMenuTitle("SmartToast").setMenuSubTitle("调用带Context的方法").setOnClickListener (object : View.OnClickListener {
+            var i = 0
+            override fun onClick(v: View?) {
+                i++
+                SnbLog.e(">>>>>>iiiiii:"+i)
+                showSmart(context, "我是Activity调用$i")
+            }
+
+        }))
+
+        menuBeans.add(MenuBean().setMenuTitle("SmartToast").setMenuSubTitle("调用不带Context的方法").setOnClickListener(object : View.OnClickListener {
+            var i = 0
+            override fun onClick(v: View?) {
+                i++
+                SnbLog.e(">>>>>>iiiiii:"+i)
+                showSmart(msg = "我是直接调用$i")
+            }
+
+        }))
         return menuBeans
     }
 }

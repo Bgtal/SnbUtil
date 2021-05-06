@@ -26,6 +26,7 @@ class MainActivity : SimpleMenuActivity() {
         menuBeans.add(MenuBean().setMenuTitle("SnbRippleCreateFactory").setActivityClass(SnbRippleActivity::class.java))
         menuBeans.add(MenuBean().setMenuTitle("SnbColorAndDrawableSelectorActivity").setActivityClass(SnbColorAndDrawableSelectorActivity::class.java))
         menuBeans.add(MenuBean().setMenuTitle("SnbBluetoothManagerActivity").setActivityClass(SnbBluetoothManagerActivity::class.java))
+        menuBeans.add(MenuBean().setMenuTitle("SnbUtilActivity").setActivityClass(SnbUtilActivity::class.java))
 
         return menuBeans
     }

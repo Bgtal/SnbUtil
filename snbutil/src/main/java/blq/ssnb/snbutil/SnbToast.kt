@@ -1,12 +1,16 @@
 package blq.ssnb.snbutil
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.app.NotificationManagerCompat
 import blq.ssnb.snbutil.SnbLog.w
+import blq.ssnb.snbutil.toast.Toast9
 import java.lang.ref.WeakReference
 
 /**
@@ -20,18 +24,21 @@ import java.lang.ref.WeakReference
  * 2.删除对位置修改的功能，提供了方法可以使用提供的context显示toast 并且该toast无法被取消只能等到时间结束，用于比较重要的提示的展示
  * 描述:
  * 对Toast的封装,使用前需要在Application 中调用SnbToast.init(Context)方法;
- * 1.
+ *
+ * @note Android 9 对系统toast 做了处理，会导致
+ * 1.连续调用系统Toast，将前面的toast顶掉
+ * 2.关闭通知权限导致 toast不显示
+ *
  *
  * ================================================
 </pre> *
  */
-object SnbToast {
-    /**
-     * 弱应用的上下文对象
-     */
-    private var weakContext: WeakReference<Context?>? = null
+object SnbToast : Application.ActivityLifecycleCallbacks {
+
     private var mMainToast: Toast? = null
     private var mThreadToast: Toast? = null
+    private var mMainToast9: Toast9? = null
+    private var mThreadToast9: Toast9? = null
 
     /**
      * 传入Application 的上下文对象，需要在Application 中初始化
@@ -41,9 +48,7 @@ object SnbToast {
     @JvmStatic
     fun init(context: Context?) {
         if (context is Application) {
-            if (weakContext == null || weakContext!!.get() == null) {
-                weakContext = WeakReference(context)
-            }
+            context.registerActivityLifecycleCallbacks(this)
         } else {
             throw ClassCastException("context 必须是继承Application的上下文对象，否者会导致内存泄漏")
         }
@@ -160,18 +165,26 @@ object SnbToast {
         }
     }
 
-    private fun showToast(context: Context?, msg: String?, isLongShow: Boolean) {
+    private fun showToast(context: Context, msg: String?, isLongShow: Boolean) {
         if (msg == null || ("" == msg.trim { it <= ' ' })) {
             w("msg 为空，不显示Toast")
             return
         }
         if (SnbCheckUtil.isMainThread) {
-            Toast.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+            if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+                Toast.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+            } else {
+                Toast9.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+            }
         } else {
             if (Looper.myLooper() == null) {
                 Looper.prepare()
             }
-            Toast.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+            if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+                Toast.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+            } else {
+                Toast9.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+            }
             Looper.loop()
         }
     }
@@ -182,27 +195,75 @@ object SnbToast {
             return
         }
         if (SnbCheckUtil.isMainThread) {
-            mMainToast?.cancel()
-            mMainToast = Toast.makeText(mContext, msg, Toast.LENGTH_SHORT)
-            mThreadToast?.cancel()
-            mMainToast?.setText(msg)
-            mMainToast?.duration = if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
-            mMainToast?.show()
+            cancelMain()
+            cancelThread()
+            mContext?.let {
+                if (NotificationManagerCompat.from(it).areNotificationsEnabled()) {
+                    mMainToast = Toast.makeText(it, msg, Toast.LENGTH_SHORT)
+                    mMainToast?.show()
+                } else {
+                    mMainToast9 = Toast9.makeText(it, "toast9:" + msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+                    mMainToast9?.show()
+                }
+            }
+
         } else {
-            mMainToast?.cancel()
+            cancelMain()
             Handler(Looper.getMainLooper()).post(Runnable {
-                mThreadToast?.cancel()
-                mThreadToast = Toast.makeText(mContext, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
-                mThreadToast?.show()
+                cancelThread()
+                mContext?.let {
+                    if (NotificationManagerCompat.from(it).areNotificationsEnabled()) {
+                        mThreadToast = Toast.makeText(mContext, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+                        mThreadToast?.show()
+                    } else {
+                        mThreadToast9 = Toast9.makeText(it, msg, Toast.LENGTH_SHORT)
+                        mThreadToast9?.show()
+                    }
+                }
             })
         }
     }
 
+    private fun cancelMain() {
+        mMainToast?.cancel()
+        mMainToast9?.cancel()
+
+    }
+
+    private fun cancelThread() {
+        mThreadToast?.cancel()
+        mThreadToast9?.cancel()
+    }
+
     private val mContext: Context?
         get() {
-            if (weakContext == null) {
-                throw IllegalAccessError("请在Application中调用 SnbToast.init(Application)方法")
-            }
-            return weakContext!!.get()
+            return currentActivity?.get()
         }
+
+    private var currentActivity: WeakReference<Context?>? = null
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        currentActivity = WeakReference(activity)
+    }
+
+    override fun onActivityStarted(activity: Activity) {
+        currentActivity = WeakReference(activity)
+    }
+
+    override fun onActivityResumed(activity: Activity) {
+        currentActivity = WeakReference(activity)
+    }
+
+    override fun onActivityPaused(activity: Activity) {
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+    }
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+    }
+
+    override fun onActivityDestroyed(activity: Activity) {
+        currentActivity?.clear()
+    }
 }

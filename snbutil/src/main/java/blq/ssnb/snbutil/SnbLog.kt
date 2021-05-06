@@ -111,7 +111,7 @@ object SnbLog {
 
     @JvmStatic
     fun v(content: String?) {
-        v(globalBuilder!!.mTag, content)
+        v(globalBuilder.mTag, content)
     }
 
     @JvmStatic
@@ -126,7 +126,7 @@ object SnbLog {
 
     @JvmStatic
     fun d(content: String?) {
-        d(globalBuilder!!.mTag, content)
+        d(globalBuilder.mTag, content)
     }
 
     @JvmStatic
@@ -171,7 +171,7 @@ object SnbLog {
 
     @JvmStatic
     fun e(content: String?) {
-        e(globalBuilder!!.mTag, content)
+        e(globalBuilder.mTag, content)
     }
 
     @JvmStatic
@@ -186,7 +186,7 @@ object SnbLog {
 
     @JvmStatic
     fun a(content: String?) {
-        a(globalBuilder!!.mTag, content)
+        a(globalBuilder.mTag, content)
     }
 
     @JvmStatic
