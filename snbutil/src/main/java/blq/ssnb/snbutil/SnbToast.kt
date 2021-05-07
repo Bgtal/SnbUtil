@@ -202,7 +202,7 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
                     mMainToast = Toast.makeText(it, msg, Toast.LENGTH_SHORT)
                     mMainToast?.show()
                 } else {
-                    mMainToast9 = Toast9.makeText(it, "toast9:" + msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+                    mMainToast9 = Toast9.makeText(it, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
                     mMainToast9?.show()
                 }
             }

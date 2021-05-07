@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Toast9Anim">
-        <item name="android:windowEnterAnimation">@anim/toast9enter</item>
-        <item name="android:windowExitAnimation">@anim/toast9exit</item>
-    </style>
-</resources>

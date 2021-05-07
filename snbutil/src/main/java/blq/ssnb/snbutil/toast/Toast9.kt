@@ -6,7 +6,6 @@ import android.graphics.PixelFormat
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import blq.ssnb.snbutil.R
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -96,7 +95,6 @@ internal class Toast9 constructor(context: Context, text: CharSequence, duration
     internal fun realShow() {
         state = STATE_SHOWING
         timer?.cancel()
-        params?.windowAnimations = R.style.Toast9Anim
         manager.addView(contentView?.get(), params)
         timer = Timer()
         timer?.schedule(object : TimerTask() {
