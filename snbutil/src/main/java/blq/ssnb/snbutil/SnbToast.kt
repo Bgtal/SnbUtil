@@ -172,18 +172,34 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
         }
         if (SnbCheckUtil.isMainThread) {
             if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-                Toast.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    msg,
+                    if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                ).show()
             } else {
-                Toast9.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+                Toast9.makeText(
+                    context,
+                    msg,
+                    if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                ).show()
             }
         } else {
             if (Looper.myLooper() == null) {
                 Looper.prepare()
             }
             if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-                Toast.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    msg,
+                    if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                ).show()
             } else {
-                Toast9.makeText(context, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+                Toast9.makeText(
+                    context,
+                    msg,
+                    if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                ).show()
             }
             Looper.loop()
         }
@@ -202,7 +218,11 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
                     mMainToast = Toast.makeText(it, msg, Toast.LENGTH_SHORT)
                     mMainToast?.show()
                 } else {
-                    mMainToast9 = Toast9.makeText(it, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+                    mMainToast9 = Toast9.makeText(
+                        it,
+                        msg,
+                        if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                    )
                     mMainToast9?.show()
                 }
             }
@@ -213,7 +233,11 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
                 cancelThread()
                 mContext?.let {
                     if (NotificationManagerCompat.from(it).areNotificationsEnabled()) {
-                        mThreadToast = Toast.makeText(mContext, msg, if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT)
+                        mThreadToast = Toast.makeText(
+                            mContext,
+                            msg,
+                            if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                        )
                         mThreadToast?.show()
                     } else {
                         mThreadToast9 = Toast9.makeText(it, msg, Toast.LENGTH_SHORT)
@@ -243,15 +267,24 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
     private var currentActivity: WeakReference<Context?>? = null
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        currentActivity = WeakReference(activity)
+        if (activity != currentActivity?.get()) {
+            currentActivity?.clear()
+            currentActivity = WeakReference(activity)
+        }
     }
 
     override fun onActivityStarted(activity: Activity) {
-        currentActivity = WeakReference(activity)
+        if (activity != currentActivity?.get()) {
+            currentActivity?.clear()
+            currentActivity = WeakReference(activity)
+        }
     }
 
     override fun onActivityResumed(activity: Activity) {
-        currentActivity = WeakReference(activity)
+        if (activity != currentActivity?.get()) {
+            currentActivity?.clear()
+            currentActivity = WeakReference(activity)
+        }
     }
 
     override fun onActivityPaused(activity: Activity) {
@@ -264,6 +297,8 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityDestroyed(activity: Activity) {
-        currentActivity?.clear()
+        if(activity == currentActivity?.get()){
+            currentActivity?.clear()
+        }
     }
 }
