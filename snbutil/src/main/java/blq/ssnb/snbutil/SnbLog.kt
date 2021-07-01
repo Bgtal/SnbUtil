@@ -33,10 +33,10 @@ object SnbLog {
      * Log 打印的构造器 用来配置打印参数
      */
     class Builder {
-        var mTag: String
-        var isOpen: Boolean
-        var isShowLocation: Boolean
-        var isShowBorderLine: Boolean
+        internal var mTag: String
+        internal var isOpen: Boolean
+        internal var isShowLocation: Boolean
+        internal var isShowBorderLine: Boolean
 
         /**
          * 设置Log 的tag
@@ -44,7 +44,7 @@ object SnbLog {
          * @return Builder
          */
         fun setTag(tag: String): Builder {
-            require(!tag.trim { it <= ' ' }.isEmpty()) { "设置的全局TAG为空，请检查" }
+            require(tag.trim { it <= ' ' }.isNotEmpty()) { "设置的全局TAG为空，请检查" }
             mTag = tag
             return this
         }
@@ -215,7 +215,12 @@ object SnbLog {
      * @param buildTag 打印的tag 如果为空或者null 那就设置为 TAG
      * @param contentMsg log 内容
      */
-    private fun printLog(@TYPE type: Int, builder: Builder?, buildTag: String?, contentMsg: String?) {
+    private fun printLog(
+        @TYPE type: Int,
+        builder: Builder?,
+        buildTag: String?,
+        contentMsg: String?
+    ) {
         var tag = buildTag
         var content = contentMsg
         if (!GLOBAL_LOG_PRINT || builder?.isOpen != true) {
@@ -312,10 +317,12 @@ object SnbLog {
                 element = elements[6]
             }
             Formatter()
-                    .format("Thread: %s, at %s\n",
-                            Thread.currentThread().name,
-                            element.toString())
-                    .toString()
+                .format(
+                    "Thread: %s, at %s\n",
+                    Thread.currentThread().name,
+                    element.toString()
+                )
+                .toString()
         } catch (ignored: Exception) {
             ""
         }

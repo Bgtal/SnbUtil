@@ -27,7 +27,8 @@ import java.util.*
  */
 internal class Toast9 constructor(context: Context, text: CharSequence, duration: Int) {
 
-    private val manager: WindowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val manager: WindowManager =
+        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var contentView: WeakReference<View?>? = null
     private var params: WindowManager.LayoutParams? = null
     private var timer: Timer? = null
@@ -70,17 +71,22 @@ internal class Toast9 constructor(context: Context, text: CharSequence, duration
          * 同时y位置和gravity位置，通过获取系统的位置来设置，可以达到显示一致
          */
         params = WindowManager.LayoutParams()
-        params?.let {
-            it.height = WindowManager.LayoutParams.WRAP_CONTENT
-            it.width = WindowManager.LayoutParams.WRAP_CONTENT
-            it.format = PixelFormat.TRANSLUCENT
-            it.windowAnimations = android.R.style.Animation_Toast
-            it.title = "Toast"
-            it.flags = (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        params?.apply {
+            height = WindowManager.LayoutParams.WRAP_CONTENT
+            width = WindowManager.LayoutParams.WRAP_CONTENT
+            format = PixelFormat.TRANSLUCENT
+            windowAnimations = android.R.style.Animation_Toast
+            title = "Toast"
+            flags = (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                     or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            it.y = context.resources.getDimensionPixelSize(Resources.getSystem().getIdentifier("toast_y_offset", "dimen", "android"))
-            it.gravity = context.resources.getInteger(Resources.getSystem().getIdentifier("config_toastDefaultGravity", "integer", "android"))
+            y = context.resources.getDimensionPixelSize(
+                Resources.getSystem().getIdentifier("toast_y_offset", "dimen", "android")
+            )
+            gravity = context.resources.getInteger(
+                Resources.getSystem()
+                    .getIdentifier("config_toastDefaultGravity", "integer", "android")
+            )
         }
 
         if (toastHandler == null) {
@@ -95,13 +101,20 @@ internal class Toast9 constructor(context: Context, text: CharSequence, duration
     internal fun realShow() {
         state = STATE_SHOWING
         timer?.cancel()
-        manager.addView(contentView?.get(), params)
-        timer = Timer()
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                toastHandler?.sendToastCancel(this@Toast9)
-            }
-        }, durationTime)
+
+        val existView = contentView?.get()?.let {
+            manager.addView(it, params)
+            timer = Timer()
+            timer?.schedule(object : TimerTask() {
+                override fun run() {
+                    toastHandler?.sendToastCancel(this@Toast9)
+                }
+            }, durationTime)
+            it
+        }
+        if (existView == null) {
+            cancel()
+        }
     }
 
     fun cancel() {
