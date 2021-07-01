@@ -24,12 +24,12 @@ object SnbEncryptionUtil {
     private const val MD5: String = "MD5"
     private const val SHA: String = "SHA"
     private val digits: CharArray = charArrayOf(
-            '0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9', 'a', 'b',
-            'c', 'd', 'e', 'f', 'g', 'h',
-            'i', 'j', 'k', 'l', 'm', 'n',
-            'o', 'p', 'q', 'r', 's', 't',
-            'u', 'v', 'w', 'x', 'y', 'z'
+        '0', '1', '2', '3', '4', '5',
+        '6', '7', '8', '9', 'a', 'b',
+        'c', 'd', 'e', 'f', 'g', 'h',
+        'i', 'j', 'k', 'l', 'm', 'n',
+        'o', 'p', 'q', 'r', 's', 't',
+        'u', 'v', 'w', 'x', 'y', 'z'
     )
 
     /**
@@ -122,10 +122,11 @@ object SnbEncryptionUtil {
     private fun byte2hex(b: ByteArray): String {
         val hsBuilder: StringBuilder = StringBuilder()
         for (by: Byte in b) {
-            if ((by.and(0xFF.toByte())) < 0x10) {
+            val temp = by.toInt().and(0xFF)
+            if (temp < 0x10) {
                 hsBuilder.append("0")
             }
-            hsBuilder.append(Integer.toHexString(by.and(0xFF.toByte()).toInt())).append(":")
+            hsBuilder.append(Integer.toHexString(temp)).append(":")
         }
         if (b.isNotEmpty()) {
             hsBuilder.deleteCharAt(hsBuilder.length - 1)
