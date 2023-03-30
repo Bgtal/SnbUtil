@@ -3,7 +3,10 @@ package blq.ssnb.snbutil.toast
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.PixelFormat
+import android.os.Binder
+import android.os.Build
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import java.lang.ref.WeakReference
@@ -27,8 +30,7 @@ import java.util.*
  */
 internal class Toast9 constructor(context: Context, text: CharSequence, duration: Int) {
 
-    private val manager: WindowManager =
-        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val manager: WindowManager = context.getSystemService(WindowManager::class.java)
     private var contentView: WeakReference<View?>? = null
     private var params: WindowManager.LayoutParams? = null
     private var timer: Timer? = null

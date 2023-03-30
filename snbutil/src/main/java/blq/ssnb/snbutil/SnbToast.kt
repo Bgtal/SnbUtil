@@ -3,6 +3,7 @@ package blq.ssnb.snbutil
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -172,37 +173,57 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
             return
         }
         if (SnbCheckUtil.isMainThread) {
-            if (NotificationManagerCompat.from(context).areNotificationsEnabled()
-                && RomUtil.currentRomManager.canBackgroundPopup(context)
-            ) {
+            //如果是30以上的版本，Toast就能正常显示了
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
                 Toast.makeText(
                     context,
                     msg,
                     if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
                 ).show()
-            } else {
-                Toast9.makeText(
-                    context,
-                    msg,
-                    if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
-                ).show()
+            }else{
+
+                if (NotificationManagerCompat.from(context).areNotificationsEnabled()
+                    && RomUtil.currentRomManager.canBackgroundPopup(context)
+                ) {
+                    Toast.makeText(
+                        context,
+                        msg,
+                        if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast9.makeText(
+                        context,
+                        msg,
+                        if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         } else {
             if (Looper.myLooper() == null) {
                 Looper.prepare()
             }
-            if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+
+            //如果是30以上的版本，Toast就能正常显示了
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
                 Toast.makeText(
                     context,
                     msg,
                     if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
                 ).show()
-            } else {
-                Toast9.makeText(
-                    context,
-                    msg,
-                    if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
-                ).show()
+            }else{
+                if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+                    Toast.makeText(
+                        context,
+                        msg,
+                        if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast9.makeText(
+                        context,
+                        msg,
+                        if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
             Looper.loop()
         }
@@ -217,18 +238,25 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
             cancelMain()
             cancelThread()
             mContext?.let {
-                if (NotificationManagerCompat.from(it).areNotificationsEnabled()
-                    && RomUtil.currentRomManager.canBackgroundPopup(it)
-                ) {
+                //如果是30以上的版本，Toast就能正常显示了
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
                     mMainToast = Toast.makeText(it, msg, Toast.LENGTH_SHORT)
                     mMainToast?.show()
-                } else {
-                    mMainToast9 = Toast9.makeText(
-                        it,
-                        msg,
-                        if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
-                    )
-                    mMainToast9?.show()
+                }else{
+                    //30以下的版本需要进行判断
+                    if (NotificationManagerCompat.from(it).areNotificationsEnabled()
+                        && RomUtil.currentRomManager.canBackgroundPopup(it)
+                    ) {
+                        mMainToast = Toast.makeText(it, msg, Toast.LENGTH_SHORT)
+                        mMainToast?.show()
+                    } else {
+                        mMainToast9 = Toast9.makeText(
+                            it,
+                            msg,
+                            if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                        )
+                        mMainToast9?.show()
+                    }
                 }
             }
 
@@ -237,16 +265,25 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
             Handler(Looper.getMainLooper()).post(Runnable {
                 cancelThread()
                 mContext?.let {
-                    if (NotificationManagerCompat.from(it).areNotificationsEnabled()) {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
                         mThreadToast = Toast.makeText(
                             mContext,
                             msg,
                             if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
                         )
                         mThreadToast?.show()
-                    } else {
-                        mThreadToast9 = Toast9.makeText(it, msg, Toast.LENGTH_SHORT)
-                        mThreadToast9?.show()
+                    }else{
+                        if (NotificationManagerCompat.from(it).areNotificationsEnabled()) {
+                            mThreadToast = Toast.makeText(
+                                mContext,
+                                msg,
+                                if (isLongShow) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                            )
+                            mThreadToast?.show()
+                        } else {
+                            mThreadToast9 = Toast9.makeText(it, msg, Toast.LENGTH_SHORT)
+                            mThreadToast9?.show()
+                        }
                     }
                 }
             })
