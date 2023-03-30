@@ -1,6 +1,5 @@
 package blq.ssnb.snbutil.rom.adapter
 
-import android.content.Context
 import blq.ssnb.snbutil.rom.Rom
 import blq.ssnb.snbutil.rom.RomAdapter
 

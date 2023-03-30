@@ -1,10 +1,8 @@
 package blq.ssnb.snbutil.rom.adapter
 
-import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Context
 import android.os.Process
-import android.provider.Settings
 import blq.ssnb.snbutil.rom.Rom
 import blq.ssnb.snbutil.rom.RomAdapter
 
@@ -22,12 +20,6 @@ import blq.ssnb.snbutil.rom.RomAdapter
  * </pre>
  */
 class HuaWeiRomAdapter : RomAdapter(Rom.HUAWEI) {
-    override fun checkFloatWindowPermission(context: Context?): Boolean {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            Settings.canDrawOverlays(context)
-        }
-        return false;
-    }
 
     override fun canBackgroundPopup(context: Context?): Boolean {
         try {

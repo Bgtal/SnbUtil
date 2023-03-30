@@ -68,7 +68,7 @@ object RomUtil {
      * @param rom 实现{@link IRomBean#version}版本判断的属性名称
      * @return true 对应的rom
      */
-    public fun isRom(rom: IRomBean): Boolean {
+    fun isRom(rom: IRomBean): Boolean {
         val list = cmd("getprop ${rom.version}")
         var isRome = false
         for (s in list) {
@@ -79,6 +79,22 @@ object RomUtil {
         }
         return isRome
     }
+
+    /**
+     * 获取当前Rom的version
+     */
+    fun getRomVersion(rom:IRomBean):String{
+        val list = cmd("getprop ${rom.version}")
+        var romVersion = "UNKNOW";
+        for (s in list) {
+            if (s.isNotEmpty()) {
+                romVersion = s
+                break
+            }
+        }
+        return romVersion;
+    }
+
 
     //一个简易的CMD,暂时不做扩展
     private fun cmd(command: String): ArrayList<String> {

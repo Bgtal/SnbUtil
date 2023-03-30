@@ -26,14 +26,22 @@ class RomManager private constructor() {
 
     val romName: String get() = mRomAdapter?.romName ?: "unknown"
 
+    val romVersion: String get() = mRomAdapter?.romVersion ?: "unknown"
+
     /**
      * 判断是否可以在后台弹窗
      * @return 有该功能的手机一般默认为关:false
      */
     fun canBackgroundPopup(context: Context?): Boolean {
-        return if (mRomAdapter != null) {
-            mRomAdapter!!.canBackgroundPopup(context!!)
-        } else false
+        return mRomAdapter?.canBackgroundPopup(context) == false
+    }
+
+    fun jumpToSystemAppInfo(context: Context?): Boolean {
+        return mRomAdapter?.jumpToSystemAppInfo(context) == true
+    }
+
+    fun canBackgroundStartActivity(context: Context?): Boolean {
+        return mRomAdapter?.canBackgroundStartActivity(context) == true
     }
 
     internal companion object {

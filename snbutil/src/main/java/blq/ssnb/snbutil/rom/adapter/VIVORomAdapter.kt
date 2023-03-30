@@ -19,9 +19,6 @@ import blq.ssnb.snbutil.rom.RomAdapter
  * </pre>
  */
 class VIVORomAdapter : RomAdapter(Rom.VIVO) {
-    override fun checkFloatWindowPermission(context: Context?): Boolean {
-        return false
-    }
 
     override fun canBackgroundStartActivity(context: Context?): Boolean {
         var state = 1

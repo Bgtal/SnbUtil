@@ -20,10 +20,6 @@ import blq.ssnb.snbutil.rom.RomAdapter
  * </pre>
  */
 class MIRomAdapter : RomAdapter(Rom.MI) {
-    override fun checkFloatWindowPermission(context: Context?): Boolean {
-
-        return true
-    }
 
     override fun canBackgroundStartActivity(context: Context?): Boolean {
         try {

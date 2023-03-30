@@ -1,7 +1,8 @@
 package blq.ssnb.snbutil.rom
 
 import android.content.Context
-import android.os.Build
+import android.content.Intent
+import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 
@@ -18,7 +19,10 @@ import android.util.Log
  * ================================================
  * </pre>
  */
-abstract class RomAdapter(private val mIRomBean: IRomBean) {
+abstract class RomAdapter(
+    private val mIRomBean: IRomBean,
+    val romVersion: String = RomUtil.getRomVersion(mIRomBean),
+) {
 
     val version: String get() = mIRomBean.version
     val romName: String get() = mIRomBean.romName
@@ -30,11 +34,8 @@ abstract class RomAdapter(private val mIRomBean: IRomBean) {
     /**
      * 检查悬浮框权限
      */
-    open fun checkFloatWindowPermission(context: Context?): Boolean{
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return Settings.canDrawOverlays(context)
-        }
-        return true
+    open fun checkFloatWindowPermission(context: Context?): Boolean {
+        return Settings.canDrawOverlays(context)
     }
 
     /**
@@ -46,8 +47,23 @@ abstract class RomAdapter(private val mIRomBean: IRomBean) {
         return true
     }
 
-    open fun canBackgroundStartActivity(context: Context?):Boolean{
+    open fun canBackgroundStartActivity(context: Context?): Boolean {
         return true
+    }
+
+    /**
+     * 跳转到系统应用信息界面
+     */
+    open fun jumpToSystemAppInfo(context: Context?): Boolean {
+        return context?.let {
+            val intent = Intent()
+            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            val uri = Uri.fromParts("package", context.packageName, null)
+            intent.data = uri
+            context.applicationContext.startActivity(intent)
+            true
+        } == true
     }
 
 }
