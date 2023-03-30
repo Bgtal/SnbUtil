@@ -48,14 +48,14 @@ internal class ToastHandler constructor(lopper: Looper) : Handler(lopper) {
     }
 
     fun sendToastShow(toast: Toast9) {
-        val msg = Message()
+        val msg = Message.obtain()
         msg.what = MSG_WHAT_SHOW_TOAST
         msg.obj = toast
         sendMessage(msg)
     }
 
     fun sendToastCancel(toast: Toast9) {
-        val msg = Message()
+        val msg = Message.obtain()
         msg.what = MSG_WHAT_CANCEL_TOAST
         msg.obj = toast
         sendMessage(msg)

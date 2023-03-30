@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationManagerCompat
 import blq.ssnb.snbutil.SnbLog.w
+import blq.ssnb.snbutil.rom.RomUtil
 import blq.ssnb.snbutil.toast.Toast9
 import java.lang.ref.WeakReference
 
@@ -171,7 +172,9 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
             return
         }
         if (SnbCheckUtil.isMainThread) {
-            if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+            if (NotificationManagerCompat.from(context).areNotificationsEnabled()
+                && RomUtil.currentRomManager.canBackgroundPopup(context)
+            ) {
                 Toast.makeText(
                     context,
                     msg,
@@ -214,7 +217,9 @@ object SnbToast : Application.ActivityLifecycleCallbacks {
             cancelMain()
             cancelThread()
             mContext?.let {
-                if (NotificationManagerCompat.from(it).areNotificationsEnabled()) {
+                if (NotificationManagerCompat.from(it).areNotificationsEnabled()
+                    && RomUtil.currentRomManager.canBackgroundPopup(it)
+                ) {
                     mMainToast = Toast.makeText(it, msg, Toast.LENGTH_SHORT)
                     mMainToast?.show()
                 } else {
