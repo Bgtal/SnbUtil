@@ -1,5 +1,6 @@
 package blq.ssnb.snbutil.rom.adapter
 
+import android.content.Context
 import blq.ssnb.snbutil.rom.Rom
 import blq.ssnb.snbutil.rom.RomAdapter
 
@@ -12,12 +13,9 @@ import blq.ssnb.snbutil.rom.RomAdapter
  * 邮箱: blq_ssnb@outlook.com
  * 修改次数: 1
  * 描述:
- *      添加描述
+ *      通用rom
  * ================================================
  * </pre>
  */
-class OppoRom : RomAdapter(Rom.OPPO) {
-    override fun checkFloatWindowPermission(): Boolean {
-        return false
-    }
+class CurrencyRomAdapter() : RomAdapter(Rom.UNKNOW){
 }

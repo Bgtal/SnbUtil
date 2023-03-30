@@ -2,9 +2,7 @@ package blq.ssnb.snbutil.rom
 
 import android.os.Build
 import blq.ssnb.snbutil.SnbLog
-import blq.ssnb.snbutil.rom.adapter.CurrencyRom
-import blq.ssnb.snbutil.rom.adapter.HuaweiRom
-import blq.ssnb.snbutil.rom.adapter.MiuiRom
+import blq.ssnb.snbutil.rom.adapter.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -23,13 +21,27 @@ import java.io.InputStreamReader
  */
 object RomUtil {
 
-    val romAdapter: RomAdapter = when (getCurrentRom()) {
-        Rom.HUAWEI -> HuaweiRom()
-        Rom.MI -> MiuiRom()
-        else -> {
-            CurrencyRom()
+    val currentRomManager: RomManager
+        get() {
+            val manager: RomManager = RomManager.instance
+            if (RomManager.instance.romAdapter == null) {
+                var currentRom: Rom? = Rom.UNKNOW
+                for (rom in Rom.values()) {
+                    if (isRom(rom)) {
+                        currentRom = rom
+                        break
+                    }
+                }
+                when (currentRom) {
+                    Rom.MI -> manager.romAdapter = MIRomAdapter()
+                    Rom.HUAWEI -> manager.romAdapter = HuaWeiRomAdapter()
+                    Rom.OPPO -> manager.romAdapter = OPPORomAdapter()
+                    Rom.VIVO -> manager.romAdapter = VIVORomAdapter()
+                    else -> manager.romAdapter = CurrencyRomAdapter()
+                }
+            }
+            return manager
         }
-    }
 
     /**
      * 是否华为
@@ -51,7 +63,12 @@ object RomUtil {
      */
     val isVivo: Boolean get() = isRom(Rom.VIVO)
 
-    private fun isRom(rom: Rom): Boolean {
+    /**
+     * 调用 getprop 命令来判断 手机的rom版本
+     * @param rom 实现{@link IRomBean#version}版本判断的属性名称
+     * @return true 对应的rom
+     */
+    public fun isRom(rom: IRomBean): Boolean {
         val list = cmd("getprop ${rom.version}")
         var isRome = false
         for (s in list) {
@@ -61,16 +78,6 @@ object RomUtil {
             }
         }
         return isRome
-    }
-
-    fun getCurrentRom(): Rom {
-        SnbLog.e(">>>>>获取当前rom")
-        for (rom in enumValues<Rom>()) {
-            if (isRom(rom)) {
-                return rom
-            }
-        }
-        return Rom.UNKNOW
     }
 
     //一个简易的CMD,暂时不做扩展
@@ -107,30 +114,31 @@ object RomUtil {
     /**
      * 获取build中的信息
      */
-    fun getDeviceInfo() {
-        val sb = StringBuffer()
-        sb.append("主板： " + Build.BOARD + "\n");
-        sb.append("系统启动程序版本号： " + Build.BOOTLOADER + "\n");
-        sb.append("系统定制商：" + Build.BRAND + "\n");
-        for ((index, e) in Build.SUPPORTED_ABIS.withIndex()) {
-            sb.append("cpu指令集$index: $e\n");
+    fun getDeviceInfo(): String {
+        val sb = StringBuilder()
+        sb.append("主板： ").append(Build.BOARD).append("\n")
+        sb.append("系统启动程序版本号： ").append(Build.BOOTLOADER).append("\n")
+        sb.append("系统定制商：").append(Build.BRAND).append("\n")
+        val abis = Build.SUPPORTED_ABIS
+        for (i in abis.indices) {
+            sb.append("cpu指令集").append(i).append(": ").append(abis[i]).append("\n")
         }
-        sb.append("设置参数： " + Build.DEVICE + "\n");
-        sb.append("显示屏参数：" + Build.DISPLAY + "\n");
-        sb.append("无线电固件版本：" + Build.getRadioVersion() + "\n");
-        sb.append("硬件识别码：" + Build.FINGERPRINT + "\n");
-        sb.append("硬件名称：" + Build.HARDWARE + "\n");
-        sb.append("HOST: " + Build.HOST + "\n");
-        sb.append("修订版本列表：" + Build.ID + "\n");
-        sb.append("硬件制造商：" + Build.MANUFACTURER + "\n");
-        sb.append("版本：" + Build.MODEL + "\n");
-        sb.append("硬件序列号：" + Build.SERIAL + "\n")
-        sb.append("手机制造商：" + Build.PRODUCT + "\n");
-        sb.append("描述Build的标签：" + Build.TAGS + "\n");
-        sb.append("TIME: " + Build.TIME + "\n");
-        sb.append("builder类型：" + Build.TYPE + "\n");
-        sb.append("USER: " + Build.USER + "\n");
-        SnbLog.e(">>>>>设备信息:\n$sb")
+        sb.append("设置参数： ").append(Build.DEVICE).append("\n")
+        sb.append("显示屏参数：").append(Build.DISPLAY).append("\n")
+        sb.append("无线电固件版本：").append(Build.getRadioVersion()).append("\n")
+        sb.append("硬件识别码：").append(Build.FINGERPRINT).append("\n")
+        sb.append("硬件名称：").append(Build.HARDWARE).append("\n")
+        sb.append("HOST: ").append(Build.HOST).append("\n")
+        sb.append("修订版本列表：").append(Build.ID).append("\n")
+        sb.append("硬件制造商：").append(Build.MANUFACTURER).append("\n")
+        sb.append("版本：").append(Build.MODEL).append("\n")
+        sb.append("硬件序列号：").append(Build.SERIAL).append("\n")
+        sb.append("手机制造商：").append(Build.PRODUCT).append("\n")
+        sb.append("描述Build的标签：").append(Build.TAGS).append("\n")
+        sb.append("TIME: ").append(Build.TIME).append("\n")
+        sb.append("builder类型：").append(Build.TYPE).append("\n")
+        sb.append("USER: ").append(Build.USER).append("\n")
+        return sb.toString()
     }
 
 }

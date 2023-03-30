@@ -1,5 +1,10 @@
 package blq.ssnb.snbutil.rom
 
+import android.content.Context
+import android.os.Build
+import android.provider.Settings
+import android.util.Log
+
 /**
  *
  * <pre>
@@ -13,14 +18,36 @@ package blq.ssnb.snbutil.rom
  * ================================================
  * </pre>
  */
-abstract class RomAdapter(val rom : Rom) {
+abstract class RomAdapter(private val mIRomBean: IRomBean) {
+
+    val version: String get() = mIRomBean.version
+    val romName: String get() = mIRomBean.romName
+
+    protected open fun romError(msg: String) {
+        Log.w("RomAdapter", "Error:$msg")
+    }
+
     /**
      * 检查悬浮框权限
      */
-    abstract fun checkFloatWindowPermission(): Boolean
+    open fun checkFloatWindowPermission(context: Context?): Boolean{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Settings.canDrawOverlays(context)
+        }
+        return true
+    }
 
-    fun openFloatWindowSetting(){
+    /**
+     * 判断是否有后台弹窗权限
+     * 有该权限的Rom需要在对应的RomAdapter中自己实现，且默认返回false，
+     * 无该权限的Rom不用实现，默认返回true
+     */
+    open fun canBackgroundPopup(context: Context?): Boolean {
+        return true
+    }
 
+    open fun canBackgroundStartActivity(context: Context?):Boolean{
+        return true
     }
 
 }
